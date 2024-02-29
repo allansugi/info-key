@@ -1,4 +1,4 @@
-package com.infokey.infokey.Controllers;
+package com.infokey.infokey.interfaces;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;

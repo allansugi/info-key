@@ -1,4 +1,4 @@
-package com.infokey.infokey.DAO;
+package com.infokey.infokey.interfaces;
 
 public interface DAO<T> {
     public void save(T item);

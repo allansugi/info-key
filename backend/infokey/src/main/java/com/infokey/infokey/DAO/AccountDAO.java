@@ -1,6 +1,7 @@
 package com.infokey.infokey.DAO;
 
 import com.infokey.infokey.Model.Account;
+import com.infokey.infokey.interfaces.DAO;
 
 public class AccountDAO implements DAO<Account> {
 

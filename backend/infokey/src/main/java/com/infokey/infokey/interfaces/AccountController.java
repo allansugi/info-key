@@ -1,4 +1,4 @@
-package com.infokey.infokey.Controllers;
+package com.infokey.infokey.interfaces;
 
 import java.util.List;
 
