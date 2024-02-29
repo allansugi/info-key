@@ -18,7 +18,7 @@ public class AccountDAO implements IDAO<Account> {
 
     @Autowired
     public AccountDAO() {
-        // Default Constructor        
+        // Default Constructor
     }
 
     @Override
