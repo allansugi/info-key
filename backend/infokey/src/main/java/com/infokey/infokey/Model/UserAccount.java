@@ -14,9 +14,13 @@ public class UserAccount {
 
     }
 
+
+    /**
+     * convert register form to user account to store into database
+     * @param form
+     */
     public UserAccount(RegisterForm form) {
-        UUID uuid = UUID.randomUUID();
-        this.id = uuid.toString();
+        this.id = UUID.randomUUID().toString();
         this.username = form.getUsername();
         this.email = form.getEmail();
         this.password = form.getPassword();

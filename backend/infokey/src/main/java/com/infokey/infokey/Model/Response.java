@@ -4,6 +4,9 @@ public class Response<T> {
     private Boolean success;
     private T response;
 
+    /**
+     * Response Body
+     */
     public Response() {
         // Default constructor
     }

@@ -6,7 +6,7 @@ public class AccountForm {
     private String accountPassword;
     
     public AccountForm() {
-        
+        // Default constructor
     }
 
     public String getAccountName() {

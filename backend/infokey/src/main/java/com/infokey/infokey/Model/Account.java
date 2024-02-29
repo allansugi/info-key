@@ -16,7 +16,7 @@ public class Account {
     }
 
     /**
-     * used for insert new account for password manager
+     * convert account form to store it into the database
      * @param userId
      * @param form
      */

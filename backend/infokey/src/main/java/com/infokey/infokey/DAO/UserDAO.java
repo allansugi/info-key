@@ -1,9 +1,18 @@
 package com.infokey.infokey.DAO;
 
-import com.infokey.infokey.Model.UserAccount;
-import com.infokey.infokey.interfaces.DAO;
+import java.util.List;
 
-public class UserDAO implements DAO<UserAccount> {
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.infokey.infokey.Model.UserAccount;
+import com.infokey.infokey.interfaces.DAO.IDAO;
+
+public class UserDAO implements IDAO<UserAccount> {
+
+    @Autowired
+    public UserDAO() {
+        
+    }
 
     @Override
     public void save(UserAccount item) {
@@ -18,7 +27,7 @@ public class UserDAO implements DAO<UserAccount> {
     }
 
     @Override
-    public UserAccount[] findAll() {
+    public List<UserAccount> findAll() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
     }
