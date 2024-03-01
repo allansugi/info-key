@@ -5,7 +5,7 @@ public class UpdateAccountForm extends AccountForm {
     private String userId;
 
     public UpdateAccountForm() {
-        
+        // Default constructor
     }
 
     public String getId() {
@@ -23,7 +23,4 @@ public class UpdateAccountForm extends AccountForm {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-
-    
-    
 }

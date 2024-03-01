@@ -10,8 +10,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.infokey.infokey.DB.DBUtil;
 import com.infokey.infokey.Model.Account;
+import com.infokey.infokey.Util.DBUtil;
 import com.infokey.infokey.interfaces.DAO.IDAO;
 
 public class AccountDAO implements IDAO<Account> {
