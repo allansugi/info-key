@@ -31,11 +31,11 @@ public class AccountDAO implements IDAO<Account> {
                 """
             );
 
-            stmt.setString(0, item.getId());
-            stmt.setString(1, item.getUserId());
-            stmt.setString(2, item.getAccount_name());
-            stmt.setString(3, item.getAccount_username());
-            stmt.setString(4, item.getAccount_password());
+            stmt.setString(1, item.getId());
+            stmt.setString(2, item.getUserId());
+            stmt.setString(3, item.getAccount_name());
+            stmt.setString(4, item.getAccount_username());
+            stmt.setString(5, item.getAccount_password());
 
             stmt.execute();
 
@@ -58,11 +58,11 @@ public class AccountDAO implements IDAO<Account> {
                 """
             );
 
-            stmt.setString(0, item.getId());
-            stmt.setString(1, item.getUserId());
-            stmt.setString(2, item.getAccount_name());
-            stmt.setString(3, item.getAccount_username());
-            stmt.setString(4, item.getAccount_password());
+            stmt.setString(1, item.getId());
+            stmt.setString(2, item.getUserId());
+            stmt.setString(3, item.getAccount_name());
+            stmt.setString(4, item.getAccount_username());
+            stmt.setString(5, item.getAccount_password());
 
             stmt.executeUpdate();
         } catch (Exception e) {

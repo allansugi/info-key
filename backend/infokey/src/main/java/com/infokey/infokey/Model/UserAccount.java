@@ -11,7 +11,7 @@ public class UserAccount {
     private String password;
 
     public UserAccount() {
-
+        // Default constructor
     }
 
 

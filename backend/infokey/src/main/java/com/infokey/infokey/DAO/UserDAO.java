@@ -31,10 +31,10 @@ public class UserDAO implements IDAO<UserAccount> {
                 """
             );
 
-            stmt.setString(0, item.getId());
-            stmt.setString(1, item.getEmail());
-            stmt.setString(2, item.getUsername());
-            stmt.setString(3, item.getPassword());
+            stmt.setString(1, item.getId());
+            stmt.setString(2, item.getEmail());
+            stmt.setString(3, item.getUsername());
+            stmt.setString(4, item.getPassword());
 
             stmt.execute();
         } catch (Exception e) {
@@ -55,10 +55,10 @@ public class UserDAO implements IDAO<UserAccount> {
                 """
             );
 
-            stmt.setString(0, item.getId());
-            stmt.setString(1, item.getEmail());
-            stmt.setString(2, item.getUsername());
-            stmt.setString(3, item.getPassword());
+            stmt.setString(1, item.getId());
+            stmt.setString(2, item.getEmail());
+            stmt.setString(3, item.getUsername());
+            stmt.setString(4, item.getPassword());
 
             stmt.executeUpdate();
         } catch (Exception e) {
