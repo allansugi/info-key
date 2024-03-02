@@ -1,10 +1,12 @@
 package com.infokey.infokey.Util;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.stereotype.Component;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.apache.commons.dbcp2.BasicDataSource;
-
+@Component
 public class DBUtil {
 
     /**
@@ -15,7 +17,7 @@ public class DBUtil {
     private static final String USERNAME = "root";
     private static final String PASSWORD = "password";
 
-    private static BasicDataSource dataSource = new BasicDataSource();
+    private static final BasicDataSource dataSource = new BasicDataSource();
 
     static {
         dataSource.setUrl(URL);

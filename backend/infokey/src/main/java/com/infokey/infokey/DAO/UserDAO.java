@@ -1,19 +1,16 @@
 package com.infokey.infokey.DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.infokey.infokey.Model.UserAccount;
 import com.infokey.infokey.Util.DBUtil;
 import com.infokey.infokey.interfaces.DAO.IDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Repository
 public class UserDAO implements IDAO<UserAccount> {
 
     @Autowired
@@ -26,7 +23,7 @@ public class UserDAO implements IDAO<UserAccount> {
         try (Connection conn = DBUtil.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement(
                 """
-                INSERT INTO account (id, userId, account_name, account_username, account_password) 
+                INSERT INTO account (id, userId, account_name, account_username, account_password)
                 VALUES (?, ?, ?, ?, ?)
                 """
             );

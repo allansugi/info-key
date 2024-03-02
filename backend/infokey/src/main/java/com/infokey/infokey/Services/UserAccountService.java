@@ -10,16 +10,16 @@ import com.infokey.infokey.Model.UserAccount;
 import com.infokey.infokey.Template.UserPasswordValidator;
 import com.infokey.infokey.Util.JWTUtil;
 import com.infokey.infokey.interfaces.Service.IUserAccountService;
-import org.apache.coyote.BadRequestException;
-import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class UserAccountService implements IUserAccountService {
 
-    private UserDAO dao;
+    private final UserDAO dao;
 
     @Autowired
     public UserAccountService(UserDAO dao) {
@@ -28,7 +28,7 @@ public class UserAccountService implements IUserAccountService {
     
 
     @Override
-    public Response<String> addUser(RegisterForm form) throws SQLException, BadRequestException {
+    public Response<String> addUser(RegisterForm form) throws SQLException,IllegalRegisterException {
         try {
             Response<String> response = new Response<>();
             UserAccount account = new UserAccount(form);
@@ -49,7 +49,7 @@ public class UserAccountService implements IUserAccountService {
     }
 
     @Override
-    public Response<String> authenticate(LoginForm form) throws AuthenticationException, SQLException {
+    public Response<String> authenticate(LoginForm form) throws LoginNotFoundException, SQLException {
          try {
             List<UserAccount> users = this.dao.findAll();
             String valId = form.getUsername();
