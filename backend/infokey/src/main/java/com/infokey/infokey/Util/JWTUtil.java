@@ -13,7 +13,7 @@ public class JWTUtil {
 
     /**
      * uses HMAC512 algorithm which is supported by auth0 JWT
-     * for more information, visit https://github.com/auth0/java-jwt
+     * for more information, visit <a href="https://github.com/auth0/java-jwt">...</a>
      * @param id userId
      * @return new token
      */

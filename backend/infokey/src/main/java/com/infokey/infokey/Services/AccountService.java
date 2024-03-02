@@ -1,20 +1,20 @@
 package com.infokey.infokey.Services;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.infokey.infokey.DAO.AccountDAO;
+import com.infokey.infokey.Exceptions.NoAccountFoundException;
 import com.infokey.infokey.Form.AccountForm;
 import com.infokey.infokey.Model.Account;
 import com.infokey.infokey.Model.Response;
 import com.infokey.infokey.Util.JWTUtil;
 import com.infokey.infokey.interfaces.Service.IAccountService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.sql.SQLException;
+import java.util.List;
 
 public class AccountService implements IAccountService {
 
-    private AccountDAO dao;
+    private final AccountDAO dao;
 
     @Autowired
     public AccountService(AccountDAO dao) {
@@ -39,21 +39,58 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public Response<String> updateAccount(String token, Account account) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateAccount'");
+    public Response<String> updateAccount(String token, Account account) throws SQLException {
+        try {
+            String userId = JWTUtil.verifyToken(token);
+            this.dao.update(account);
+
+            Response<String> response = new Response<>();
+            response.setSuccess(true);
+            response.setResponse("account information updated");
+
+            return response;
+        } catch (SQLException e) {
+            throw new SQLException("Database connection error");
+        }
     }
 
     @Override
-    public Response<String> deleteAccount(String token, String accountId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteAccount'");
+    public Response<String> deleteAccount(String token, String accountId) throws SQLException {
+        try {
+            String userId = JWTUtil.verifyToken(token);
+            this.dao.delete(accountId);
+
+            Response<String> response = new Response<>();
+            response.setSuccess(true);
+            response.setResponse("account deleted");
+
+            return response;
+        } catch (SQLException e) {
+            throw new SQLException("Database connection error");
+        }
     }
 
     @Override
-    public Response<List<Account>> findUserAccounts(String token) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findUserAccounts'");
+    public Response<List<Account>> findUserAccounts(String token) throws SQLException {
+        try {
+            String userId = JWTUtil.verifyToken(token);
+            List<Account> accounts = this.dao.findAll();
+            List<Account> userAccounts = accounts.stream()
+                                                .filter(a -> a.getUserId().equals(userId))
+                                                .toList();
+
+            if (userAccounts.isEmpty()) {
+                throw new NoAccountFoundException("no accounts found for that user");
+            }
+
+            Response<List<Account>> response = new Response<>();
+            response.setSuccess(true);
+            response.setResponse(userAccounts);
+
+            return response;
+        } catch (SQLException e) {
+            throw new SQLException("Database connection error");
+        }
     }
     
 }
