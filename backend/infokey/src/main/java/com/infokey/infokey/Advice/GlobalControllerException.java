@@ -1,5 +1,7 @@
 package com.infokey.infokey.Advice;
 
+import com.infokey.infokey.Exceptions.IllegalRegisterException;
+import com.infokey.infokey.Exceptions.LoginNotFoundException;
 import com.infokey.infokey.Model.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,54 +9,62 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.sql.SQLException;
+
 public class GlobalControllerException {
-    @ExceptionHandler(BadRequestException.class)
+
+    /**
+     * bad client input (invalid password or email requirement / parameter)
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(IllegalRegisterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ResponseEntity<Response<String>> handleBadRequestException(BadRequestException ex) {
+    public ResponseEntity<Response<String>> handleBadRequestException(IllegalRegisterException ex) {
         Response<String> response = new Response<>();
         response.setSuccess(false);
         response.setResponse(ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(DatabaseErrorException.class)
+    /**
+     * Error on database side (or other external services)
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(SQLException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public ResponseEntity<Response<String>> handleDatabaseErrorException(DatabaseErrorException ex) {
+    public ResponseEntity<Response<String>> handleDatabaseErrorException(Exception ex) {
         Response<String> response = new Response<>();
         response.setSuccess(false);
         response.setResponse(ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(RegisterArgumentException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ResponseBody
-    public ResponseEntity<Response<String>> handleRegisterArgumentException(RegisterArgumentException ex) {
-        Response<String> response = new Response<>();
-        response.setSuccess(false);
-        response.setResponse(ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
-    }
+//    @ExceptionHandler(RegisterArgumentException.class)
+//    @ResponseStatus(HttpStatus.CONFLICT)
+//    @ResponseBody
+//    public ResponseEntity<Response<String>> handleRegisterArgumentException(RegisterArgumentException ex) {
+//        Response<String> response = new Response<>();
+//        response.setSuccess(false);
+//        response.setResponse(ex.getMessage());
+//        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+//    }
 
-    @ExceptionHandler(AuthenticationException.class)
+    /**
+     * Error for invalid credential
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(LoginNotFoundException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
-    public ResponseEntity<Response<String>> handleAuthenticationException(AuthenticationException ex) {
+    public ResponseEntity<Response<String>> handleAuthenticationException(LoginNotFoundException ex) {
         Response<String> response = new Response<>();
         response.setSuccess(false);
         response.setResponse(ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(NoAccountFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    public ResponseEntity<Response<String>> handleNotFoundException(NoAccountFoundException ex) {
-        Response<String> response = new Response<>();
-        response.setSuccess(false);
-        response.setResponse(ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 }

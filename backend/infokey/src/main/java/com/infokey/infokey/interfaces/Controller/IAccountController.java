@@ -1,5 +1,6 @@
 package com.infokey.infokey.interfaces.Controller;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -14,9 +15,9 @@ import com.infokey.infokey.Model.Response;
 public interface IAccountController {
     ResponseEntity<Response<String>> insertNewAccount(@CookieValue String token, AccountForm form);
 
-    ResponseEntity<Response<String>> updateExistingAccount(@CookieValue String token, @RequestBody Account account);
+    ResponseEntity<Response<String>> updateExistingAccount(@CookieValue String token, @RequestBody Account account) throws SQLException;
 
-    ResponseEntity<Response<String>> deleteAccount(@CookieValue String token, @PathVariable String accountId);
+    ResponseEntity<Response<String>> deleteAccount(@CookieValue String token, @PathVariable String accountId) throws SQLException;
 
-    ResponseEntity<Response<List<Account>>> findUserAccounts(@CookieValue String token);
+    ResponseEntity<Response<List<Account>>> findUserAccounts(@CookieValue String token) throws SQLException;
 }
