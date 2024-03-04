@@ -13,9 +13,9 @@ public class DBUtil {
      * For storing user account and password account
      * config according to docker compose file at the parent folder
      */
-    private static final String URL = "jdbc:mysql://db:3306/app";
+    private static final String URL = "jdbc:mysql://db:3306/application";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = "password";
+    private static final String PASSWORD = "secret";
 
     private static final BasicDataSource dataSource = new BasicDataSource();
 
