@@ -23,14 +23,14 @@ public class UserDAO implements IDAO<UserAccount> {
         try (Connection conn = DBUtil.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement(
                 """
-                INSERT INTO account (id, userId, account_name, account_username, account_password)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO user (id, username, email, password)
+                VALUES (?, ?, ?, ?)
                 """
             );
 
             stmt.setString(1, item.getId());
-            stmt.setString(2, item.getEmail());
-            stmt.setString(3, item.getUsername());
+            stmt.setString(2, item.getUsername());
+            stmt.setString(3, item.getEmail());
             stmt.setString(4, item.getPassword());
 
             stmt.execute();

@@ -13,13 +13,11 @@ import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true" )
 @RestController
 @RequestMapping("/api/user")
 public class UserAccountController implements IUserAccountController {
@@ -33,14 +31,17 @@ public class UserAccountController implements IUserAccountController {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<Response<String>> register(RegisterForm form) throws SQLException, BadRequestException {
+    public ResponseEntity<Response<String>> register(@RequestBody RegisterForm form) throws SQLException, BadRequestException {
+        System.out.println(form.getEmail());
+        System.out.println(form.getUsername());
+        System.out.println(form.getPassword());
         Response<String> response = service.addUser(form);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Override
     @PutMapping("/login")
-    public ResponseEntity<Response<String>> login(LoginForm form, HttpServletResponse res) throws AuthenticationException, SQLException {
+    public ResponseEntity<Response<String>> login(@RequestBody LoginForm form, HttpServletResponse res) throws AuthenticationException, SQLException {
         Response<String> response = service.authenticate(form);
         String token = response.getResponse();
         Cookie cookie = new Cookie("token", token);
@@ -56,7 +57,7 @@ public class UserAccountController implements IUserAccountController {
      * coming soon!
      */
     @Override
-    public ResponseEntity<Response<String>> updateUsername(String token, UpdateAccountForm form) {
+    public ResponseEntity<Response<String>> updateUsername(@CookieValue String token, @RequestBody UpdateAccountForm form) {
         return null;
     }
 }

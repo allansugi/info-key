@@ -1,7 +1,7 @@
 package com.infokey.infokey.Services;
 
+import com.infokey.infokey.Adapter.AccountFormAdapter;
 import com.infokey.infokey.DAO.AccountDAO;
-import com.infokey.infokey.Exceptions.NoAccountFoundException;
 import com.infokey.infokey.Form.AccountForm;
 import com.infokey.infokey.Model.Account;
 import com.infokey.infokey.Model.Response;
@@ -28,7 +28,8 @@ public class AccountService implements IAccountService {
         Response<String> response = new Response<>();
         try {
             String userId = JWTUtil.verifyToken(token);
-            Account account = new Account(userId, form);
+            AccountFormAdapter adapter = new AccountFormAdapter(form, userId);
+            Account account = adapter.convertToAccount();
             this.dao.save(account);
             
             response.setSuccess(true);
@@ -80,10 +81,6 @@ public class AccountService implements IAccountService {
             List<Account> userAccounts = accounts.stream()
                                                 .filter(a -> a.getUserId().equals(userId))
                                                 .toList();
-
-            if (userAccounts.isEmpty()) {
-                throw new NoAccountFoundException("no accounts found for that user");
-            }
 
             Response<List<Account>> response = new Response<>();
             response.setSuccess(true);
