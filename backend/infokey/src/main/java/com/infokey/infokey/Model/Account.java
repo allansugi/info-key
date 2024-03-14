@@ -1,9 +1,5 @@
 package com.infokey.infokey.Model;
 
-import java.util.UUID;
-
-import com.infokey.infokey.Form.AccountForm;
-
 public class Account {
     private String id;
     private String userId;
@@ -13,19 +9,6 @@ public class Account {
 
     public Account() {
         // Default constructor
-    }
-
-    /**
-     * convert account form to store it into the database
-     * @param userId
-     * @param form
-     */
-    public Account(String userId, AccountForm form) {
-        this.id = UUID.randomUUID().toString();
-        this.userId = userId;
-        this.account_username = form.getAccountUsername();
-        this.account_name = form.getAccountName();
-        this.account_password = form.getAccountPassword();
     }
 
     public String getAccount_name() {
@@ -66,4 +49,6 @@ public class Account {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+
 }

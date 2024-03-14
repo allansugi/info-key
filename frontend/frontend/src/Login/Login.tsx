@@ -1,4 +1,4 @@
-import { Alert, Button, Container, FormControlLabel, FormGroup, IconButton, InputAdornment, Paper, Stack, Switch, TextField, Typography } from "@mui/material";
+import { Alert, Button, Container, FormGroup, IconButton, InputAdornment, Paper, Stack, Switch, TextField, Typography } from "@mui/material";
 import React from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from "react-router-dom";
@@ -42,17 +42,17 @@ export default function Login() {
 
     const handleSubmit = async () => {
         if (!isRegister && username.length !== 0 && password.length !== 0) {
-            // TODO: use API related to login
             try {
                 const response = await fetch("http://localhost:8080/api/user/login", {
-                    method: 'POST',
+                    method: 'PUT',
                     mode: 'cors',
+                    credentials: 'include',
                     headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        email: username,
+                        username: username,
                         password: password
                     })
                 });
@@ -69,11 +69,11 @@ export default function Login() {
                 return;
             }
         } else if (isRegister && email.length !== 0 && username.length !== 0 && password.length !== 0) {
-            // TODO: use API related to register
             try {
-                const response = await fetch("http://localhost:8080/api/user/register", {
+                await fetch("http://localhost:8080/api/user/register", {
                     method: 'POST',
                     mode: 'cors',
+                    credentials: 'include',
                     headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -84,9 +84,7 @@ export default function Login() {
                         password: password
                     })
                 });
-                console.log(response);
             } catch (error) {
-                console.log(error);
                 return;
             }
 

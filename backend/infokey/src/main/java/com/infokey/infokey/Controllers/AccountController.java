@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/account")
 public class AccountController implements IAccountController {
@@ -26,28 +27,30 @@ public class AccountController implements IAccountController {
 
     @Override
     @PostMapping("/add")
-    public ResponseEntity<Response<String>> insertNewAccount(String token, AccountForm form) {
+    public ResponseEntity<Response<String>> insertNewAccount(@CookieValue String token, @RequestBody AccountForm form) {
+        System.out.println(form.toString());
         Response<String> response = this.service.addAccount(token, form);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
     @PutMapping("/update")
-    public ResponseEntity<Response<String>> updateExistingAccount(String token, Account account) throws SQLException {
+    public ResponseEntity<Response<String>> updateExistingAccount(@CookieValue String token, @RequestBody Account account) throws SQLException {
         Response<String> response = this.service.updateAccount(token, account);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
     @DeleteMapping("/delete/{accountId}")
-    public ResponseEntity<Response<String>> deleteAccount(String token, String accountId) throws SQLException {
+    public ResponseEntity<Response<String>> deleteAccount(@CookieValue String token, String accountId) throws SQLException {
         Response<String> response = this.service.deleteAccount(token, accountId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
     @GetMapping("/find/accounts")
-    public ResponseEntity<Response<List<Account>>> findUserAccounts(String token) throws SQLException {
+    public ResponseEntity<Response<List<Account>>> findUserAccounts(@CookieValue String token) throws SQLException {
+        System.out.println("token: " + token);
         Response<List<Account>> response= this.service.findUserAccounts(token);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -4,10 +4,10 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
-import { Account } from "./types/Account";
+import { Account, AccountResult } from "./types/Account";
 import { SnackbarMessage } from "./types/SnackBarMessage";
 
-export function IconMenu({ account }: { account: Account }) {
+export function IconMenu({ account }: { account: AccountResult }) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 

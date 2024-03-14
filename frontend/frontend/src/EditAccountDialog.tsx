@@ -67,7 +67,7 @@ export function EditAccountDialog({props}: {props: AccountResult}) {
                   {'*'.repeat(password.length)}
                 </TableCell>
                 <TableCell>
-                  <IconMenu account={{accountname: accountname, username: username, password: password}}/>
+                  <IconMenu account={{id: id, accountname: accountname, username: username, password: password}}/>
                 </TableCell>
             </TableRow>
 

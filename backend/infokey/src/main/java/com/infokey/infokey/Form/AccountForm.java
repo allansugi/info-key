@@ -33,5 +33,7 @@ public class AccountForm {
         this.accountPassword = accountPassword;
     }
 
-    
+    public String toString() {
+        return "account name: " + getAccountName() + " account username: " + getAccountUsername() + " account password: " + getAccountPassword();
+    }
 }

@@ -2,7 +2,7 @@ import { Dialog, DialogTitle, DialogContent, Stack, TextField, DialogActions, Bu
 import React from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-export default function NewAccountDialog() {
+export default function NewAccountDialog({ accounts, setAccounts }) {
 
     const [open, setOpen] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
@@ -37,15 +37,31 @@ export default function NewAccountDialog() {
         setOpen(false);
     }
 
-    const handleSubmit = () => {
-        console.log(accountName);
-        console.log(username);
-        console.log(password);
+    const handleSubmit = async() => {
         if (accountName.length === 0 || username.length === 0 || password.length === 0) {
             setError(true);
         } else {
-            setError(false);
-            setOpen(false);
+            try {
+                await fetch("http://localhost:8080/api/account/add", {
+                    method: 'POST',
+                    mode: 'cors',
+                    credentials: 'include',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        accountName: accountName,
+                        accountUsername: username,
+                        accountPassword: password
+                    })
+                })
+                setAccounts([...accounts, ])
+                setError(false);
+                setOpen(false);
+            } catch (error) {
+                return;
+            }
         }
     };
 

@@ -1,16 +1,17 @@
-import { Button, Container, InputAdornment, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { Container, InputAdornment, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import React from "react";
-import { AccountResult } from "./types/Account";
-import { rows } from "./sample";
+import { Account } from "./types/Account";
 import { EditAccountDialog } from "./EditAccountDialog";
 import NewAccountDialog from "./NewAccountDialog";
+import { ResponseGetAccount } from "./types/Response";
 
 export default function PasswordVault() {
-  const [searchResult, setSearchResult] = React.useState<AccountResult[]>(rows);
+  const [accounts, setAccounts] = React.useState<Account[]>([]);
+  const [searchResult, setSearchResult] = React.useState<Account[]>([]);
 
   React.useEffect(() => {
-    const userAccounts = async() => {
+    const getAccounts = async() => {
       const response = await fetch("http://localhost:8080/api/account/find/accounts", {
         method: 'GET',
         mode: 'cors',
@@ -21,19 +22,20 @@ export default function PasswordVault() {
         credentials: 'include'
       });
 
-      return response.json();
+      const responseBody: ResponseGetAccount = await response.json();
+      setAccounts(responseBody.response);
+      setSearchResult(responseBody.response);
     }
-
-    userAccounts();
-  })
+    getAccounts();
+  }, [])
 
   const handleSearch = (searchQuery: string) => {
     if (!searchQuery.length) {
-      setSearchResult(rows);
+      setSearchResult(accounts);
     } else {
-      setSearchResult([...rows].filter((row) => {
-        return row.accountname.toLowerCase().includes(searchQuery.toLowerCase()) || 
-              row.username.toLowerCase().includes(searchQuery.toLowerCase())
+      setSearchResult([...accounts].filter((account) => {
+        return account.account_name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+              account.account_username.toLowerCase().includes(searchQuery.toLowerCase())
       }));
     }
   }
@@ -57,7 +59,7 @@ export default function PasswordVault() {
                   ),
                 }}
               />
-            <NewAccountDialog />
+            <NewAccountDialog accounts={accounts} setAccounts={setAccounts}/>
           </Stack>
         </Stack>
       <Table aria-label="password vault table">
@@ -73,9 +75,9 @@ export default function PasswordVault() {
           {searchResult.map((row) => (
             <EditAccountDialog key={row.id} props={{
               id: row.id, 
-              accountname: row.accountname, 
-              username: row.username, 
-              password: row.password}}
+              accountname: row.account_name, 
+              username: row.account_username, 
+              password: row.account_password}}
             />
           ))}
         </TableBody>
