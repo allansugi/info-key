@@ -2,7 +2,7 @@ import { Dialog, DialogTitle, DialogContent, Stack, TextField, DialogActions, Bu
 import React from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-export default function NewAccountDialog({ accounts, setAccounts }) {
+export default function NewAccountDialog() {
 
     const [open, setOpen] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
@@ -56,7 +56,6 @@ export default function NewAccountDialog({ accounts, setAccounts }) {
                         accountPassword: password
                     })
                 })
-                setAccounts([...accounts, ])
                 setError(false);
                 setOpen(false);
             } catch (error) {

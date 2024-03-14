@@ -1,6 +1,6 @@
 import React from "react";
-import { AccountResult } from "./types/Account";
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, FilledInput, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, TableCell, TableRow, TextField } from "@mui/material";
+import { AccountViewModel } from "./types/Account";
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, Stack, TableCell, TableRow, TextField } from "@mui/material";
 import { IconMenu } from "./IconMenu";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -10,14 +10,14 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
  * @param props accountResult
  * @returns TSX element
  */
-export function EditAccountDialog({props}: {props: AccountResult}) {
-    const { id, accountname, username, password } = props;
+export function EditAccountDialog({props}: {props: AccountViewModel}) {
+    const { id, accountName, accountUsername, accountPassword } = props;
 
     const [open, setOpen] = React.useState(false);
     const [showPassword, setShowPassword] = React.useState(false);
 
-    const [Username, setUsername] = React.useState(username);
-    const [Password, setPassword] = React.useState(password);
+    const [Username, setUsername] = React.useState(accountUsername);
+    const [Password, setPassword] = React.useState(accountPassword);
 
     const [error, setError] = React.useState(false);
 
@@ -42,14 +42,29 @@ export function EditAccountDialog({props}: {props: AccountResult}) {
         setPassword(e.target.value);
     }
 
-    const handleSubmit = () => {
-        console.log("Account Name: " + accountname);
+    const handleSubmit = async() => {
+        console.log("Account Name: " + accountName);
         console.log("Username: " + Username);
         console.log("Password: " + Password);
 
         if (Username.length === 0 || Password.length === 0) {
             setError(true);
         } else {
+            await fetch("http://localhost:8080/api/account/update", {
+                method: 'PUT',
+                mode: 'cors',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: id,
+                    accountName: accountName,
+                    accountUsername: Username,
+                    accountPassword: Password
+                }),
+                credentials: 'include'
+            })
             setError(false);
             setOpen(false);
         }
@@ -60,14 +75,14 @@ export function EditAccountDialog({props}: {props: AccountResult}) {
             {/* replace with table row */}
             <TableRow key={id} sx={{ cursor: 'pointer' }}>
                 <TableCell component="th" scope="row" onClick={handleClickOpen}>
-                  {accountname}
+                  {accountName}
                 </TableCell>
-                <TableCell  onClick={handleClickOpen}>{username}</TableCell>
+                <TableCell  onClick={handleClickOpen}>{accountUsername}</TableCell>
                 <TableCell onClick={handleClickOpen}>
-                  {'*'.repeat(password.length)}
+                  {'*'.repeat(accountPassword.length)}
                 </TableCell>
                 <TableCell>
-                  <IconMenu account={{id: id, accountname: accountname, username: username, password: password}}/>
+                  <IconMenu account={{id: id, accountName: accountName, username: accountUsername, password: accountPassword}}/>
                 </TableCell>
             </TableRow>
 
@@ -80,11 +95,11 @@ export function EditAccountDialog({props}: {props: AccountResult}) {
                         <TextField
                             disabled
                             label="Account Name"
-                            defaultValue={accountname}
+                            defaultValue={accountName}
                         />
                         <TextField 
                             label="Username"
-                            defaultValue={username}
+                            defaultValue={accountUsername}
                             onChange={handleUsernameChange}
                             required 
                         />
@@ -93,7 +108,7 @@ export function EditAccountDialog({props}: {props: AccountResult}) {
                             required
                             label="Password"
                             type={showPassword ? 'text' : 'password'}
-                            defaultValue={password}
+                            defaultValue={accountPassword}
                             onChange={handlePasswordChange}
                             InputProps={{
                                 endAdornment:

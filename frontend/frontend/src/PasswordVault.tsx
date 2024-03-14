@@ -23,9 +23,11 @@ export default function PasswordVault() {
       });
 
       const responseBody: ResponseGetAccount = await response.json();
+      console.log(responseBody.response);
       setAccounts(responseBody.response);
       setSearchResult(responseBody.response);
     }
+
     getAccounts();
   }, [])
 
@@ -34,8 +36,8 @@ export default function PasswordVault() {
       setSearchResult(accounts);
     } else {
       setSearchResult([...accounts].filter((account) => {
-        return account.accountname.toLowerCase().includes(searchQuery.toLowerCase()) || 
-              account.username.toLowerCase().includes(searchQuery.toLowerCase())
+        return account.accountName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+              account.accountUsername.toLowerCase().includes(searchQuery.toLowerCase())
       }));
     }
   }
@@ -59,7 +61,7 @@ export default function PasswordVault() {
                   ),
                 }}
               />
-            <NewAccountDialog accounts={accounts} setAccounts={setAccounts}/>
+            <NewAccountDialog/>
           </Stack>
         </Stack>
       <Table aria-label="password vault table">
@@ -74,10 +76,11 @@ export default function PasswordVault() {
         <TableBody>
           {searchResult.map((row) => (
             <EditAccountDialog key={row.id} props={{
-              id: row.id, 
-              accountname: row.accountname, 
-              username: row.username, 
-              password: row.password}}
+                id: row.id, 
+                accountName: row.accountName, 
+                accountUsername: row.accountUsername, 
+                accountPassword: row.accountPassword
+              }}
             />
           ))}
         </TableBody>
