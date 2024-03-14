@@ -8,8 +8,6 @@ public interface IDAO<T> {
 
     void update(T item) throws SQLException;
 
-    List<T> findAll() throws SQLException;
-
     T findById(String id) throws SQLException;
     
     void delete(String id) throws SQLException;

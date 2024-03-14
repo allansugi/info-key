@@ -1,11 +1,14 @@
 package com.infokey.infokey.Services;
 
 import com.infokey.infokey.Adapter.AccountFormAdapter;
+import com.infokey.infokey.Adapter.UpdateAccountFormAdapter;
 import com.infokey.infokey.DAO.AccountDAO;
 import com.infokey.infokey.Form.AccountForm;
+import com.infokey.infokey.Form.UpdateAccountForm;
 import com.infokey.infokey.Model.Account;
 import com.infokey.infokey.Model.Response;
 import com.infokey.infokey.Util.JWTUtil;
+import com.infokey.infokey.ViewModel.AccountViewModel;
 import com.infokey.infokey.interfaces.Service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,10 +45,12 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public Response<String> updateAccount(String token, Account account) throws SQLException {
+    public Response<String> updateAccount(String token, UpdateAccountForm account) throws SQLException {
         try {
             String userId = JWTUtil.verifyToken(token);
-            this.dao.update(account);
+            UpdateAccountFormAdapter adapter = new UpdateAccountFormAdapter(userId, account);
+            Account convertAccount = adapter.convertToAccount();
+            this.dao.update(convertAccount);
 
             Response<String> response = new Response<>();
             response.setSuccess(true);
@@ -74,17 +79,14 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public Response<List<Account>> findUserAccounts(String token) throws SQLException {
+    public Response<List<AccountViewModel>> findUserAccounts(String token) throws SQLException {
         try {
             String userId = JWTUtil.verifyToken(token);
-            List<Account> accounts = this.dao.findAll();
-            List<Account> userAccounts = accounts.stream()
-                                                .filter(a -> a.getUserId().equals(userId))
-                                                .toList();
+            List<AccountViewModel> accounts = this.dao.findByUserId(userId);
 
-            Response<List<Account>> response = new Response<>();
+            Response<List<AccountViewModel>> response = new Response<>();
             response.setSuccess(true);
-            response.setResponse(userAccounts);
+            response.setResponse(accounts);
 
             return response;
         } catch (SQLException e) {

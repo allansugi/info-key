@@ -64,35 +64,6 @@ public class UserDAO implements IDAO<UserAccount> {
     }
 
     @Override
-    public List<UserAccount> findAll() throws SQLException {
-         List<UserAccount> accounts = new ArrayList<>();
-        try (Connection conn = DBUtil.getConnection()) {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM user");
-
-            while(rs.next()) {
-                UserAccount account = new UserAccount();
-                
-                String id = rs.getString("id");
-                String email= rs.getString("email");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-
-                account.setId(id);
-                account.setEmail(email);
-                account.setUsername(username);
-                account.setPassword(password);
-
-                accounts.add(account);
-            }
-
-            return accounts;
-        } catch (Exception e) {
-            throw new SQLException("Database connection error");
-        }
-    }
-
-    @Override
     public UserAccount findById(String id) throws SQLException {
         try (Connection  conn = DBUtil.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM user where id = ?");
@@ -129,5 +100,32 @@ public class UserDAO implements IDAO<UserAccount> {
             throw new SQLException("Database connection error");
         }
     }
-    
+
+    public List<UserAccount> findAll() throws SQLException {
+        List<UserAccount> accounts = new ArrayList<>();
+        try (Connection conn = DBUtil.getConnection()) {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM user");
+
+            while(rs.next()) {
+                UserAccount account = new UserAccount();
+
+                String id = rs.getString("id");
+                String email= rs.getString("email");
+                String username = rs.getString("username");
+                String password = rs.getString("password");
+
+                account.setId(id);
+                account.setEmail(email);
+                account.setUsername(username);
+                account.setPassword(password);
+
+                accounts.add(account);
+            }
+
+            return accounts;
+        } catch (Exception e) {
+            throw new SQLException("Database connection error");
+        }
+    }
 }

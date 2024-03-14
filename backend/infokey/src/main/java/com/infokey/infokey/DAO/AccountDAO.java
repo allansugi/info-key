@@ -2,6 +2,7 @@ package com.infokey.infokey.DAO;
 
 import com.infokey.infokey.Model.Account;
 import com.infokey.infokey.Util.DBUtil;
+import com.infokey.infokey.ViewModel.AccountViewModel;
 import com.infokey.infokey.interfaces.DAO.IDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -55,44 +56,13 @@ public class AccountDAO implements IDAO<Account> {
                 """
             );
 
-            stmt.setString(1, item.getId());
-            stmt.setString(2, item.getUserId());
-            stmt.setString(3, item.getAccount_name());
-            stmt.setString(4, item.getAccount_username());
-            stmt.setString(5, item.getAccount_password());
+            stmt.setString(1, item.getAccount_name());
+            stmt.setString(2, item.getAccount_username());
+            stmt.setString(3, item.getAccount_password());
+            stmt.setString(4, item.getId());
+            stmt.setString(5, item.getUserId());
 
             stmt.executeUpdate();
-        } catch (Exception e) {
-            throw new SQLException("Database connection error");
-        }
-    }
-
-    @Override
-    public List<Account> findAll() throws SQLException {
-        List<Account> accounts = new ArrayList<>();
-        try (Connection conn = DBUtil.getConnection()) {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM account");
-
-            while(rs.next()) {
-                Account account = new Account();
-                
-                String id = rs.getString("id");
-                String userId = rs.getString("userId");
-                String accountName = rs.getString("account_name");
-                String accountUsername = rs.getString("account_username");
-                String accountPassword = rs.getString("account_password");
-
-                account.setId(id);
-                account.setUserId(userId);
-                account.setAccount_username(accountUsername);
-                account.setAccount_name(accountName);
-                account.setAccount_password(accountPassword);
-
-                accounts.add(account);
-            }
-
-            return accounts;
         } catch (Exception e) {
             throw new SQLException("Database connection error");
         }
@@ -136,7 +106,34 @@ public class AccountDAO implements IDAO<Account> {
         } catch (Exception e) {
             throw new SQLException("Database connection error");
         }
-        
+    }
+
+    public List<AccountViewModel> findByUserId(String userId) throws SQLException {
+        List<AccountViewModel> accounts = new ArrayList<>();
+        try (Connection  conn = DBUtil.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM account where userId = ?");
+            stmt.setString(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                AccountViewModel account = new AccountViewModel();
+
+                String id = rs.getString("id");
+                String accountName = rs.getString("account_name");
+                String accountUsername = rs.getString("account_username");
+                String accountPassword = rs.getString("account_password");
+
+                account.setId(id);
+                account.setAccountUsername(accountUsername);
+                account.setAccountName(accountName);
+                account.setAccountPassword(accountPassword);
+
+                accounts.add(account);
+            }
+
+            return accounts;
+        } catch (Exception e) {
+            throw new SQLException("Database connection error");
+        }
     }
     
 }

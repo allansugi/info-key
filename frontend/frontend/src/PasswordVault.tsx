@@ -1,14 +1,14 @@
 import { Container, InputAdornment, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import React from "react";
-import { Account } from "./types/Account";
+import { AccountViewModel } from "./types/Account";
 import { EditAccountDialog } from "./EditAccountDialog";
 import NewAccountDialog from "./NewAccountDialog";
 import { ResponseGetAccount } from "./types/Response";
 
 export default function PasswordVault() {
-  const [accounts, setAccounts] = React.useState<Account[]>([]);
-  const [searchResult, setSearchResult] = React.useState<Account[]>([]);
+  const [accounts, setAccounts] = React.useState<AccountViewModel[]>([]);
+  const [searchResult, setSearchResult] = React.useState<AccountViewModel[]>([]);
 
   React.useEffect(() => {
     const getAccounts = async() => {
@@ -34,8 +34,8 @@ export default function PasswordVault() {
       setSearchResult(accounts);
     } else {
       setSearchResult([...accounts].filter((account) => {
-        return account.account_name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-              account.account_username.toLowerCase().includes(searchQuery.toLowerCase())
+        return account.accountname.toLowerCase().includes(searchQuery.toLowerCase()) || 
+              account.username.toLowerCase().includes(searchQuery.toLowerCase())
       }));
     }
   }
@@ -75,9 +75,9 @@ export default function PasswordVault() {
           {searchResult.map((row) => (
             <EditAccountDialog key={row.id} props={{
               id: row.id, 
-              accountname: row.account_name, 
-              username: row.account_username, 
-              password: row.account_password}}
+              accountname: row.accountname, 
+              username: row.username, 
+              password: row.password}}
             />
           ))}
         </TableBody>

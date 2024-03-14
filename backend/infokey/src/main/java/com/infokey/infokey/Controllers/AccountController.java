@@ -1,9 +1,10 @@
 package com.infokey.infokey.Controllers;
 
 import com.infokey.infokey.Form.AccountForm;
-import com.infokey.infokey.Model.Account;
+import com.infokey.infokey.Form.UpdateAccountForm;
 import com.infokey.infokey.Model.Response;
 import com.infokey.infokey.Services.AccountService;
+import com.infokey.infokey.ViewModel.AccountViewModel;
 import com.infokey.infokey.interfaces.Controller.IAccountController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,9 @@ public class AccountController implements IAccountController {
 
     @Override
     @PutMapping("/update")
-    public ResponseEntity<Response<String>> updateExistingAccount(@CookieValue String token, @RequestBody Account account) throws SQLException {
+    public ResponseEntity<Response<String>> updateExistingAccount(@CookieValue String token, @RequestBody UpdateAccountForm account) throws SQLException {
+        System.out.println(token);
+        System.out.println(account.toString());
         Response<String> response = this.service.updateAccount(token, account);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -49,9 +52,9 @@ public class AccountController implements IAccountController {
 
     @Override
     @GetMapping("/find/accounts")
-    public ResponseEntity<Response<List<Account>>> findUserAccounts(@CookieValue String token) throws SQLException {
+    public ResponseEntity<Response<List<AccountViewModel>>> findUserAccounts(@CookieValue String token) throws SQLException {
         System.out.println("token: " + token);
-        Response<List<Account>> response= this.service.findUserAccounts(token);
+        Response<List<AccountViewModel>> response= this.service.findUserAccounts(token);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
