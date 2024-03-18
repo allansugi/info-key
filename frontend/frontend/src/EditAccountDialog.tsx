@@ -43,10 +43,6 @@ export function EditAccountDialog({props}: {props: AccountViewModel}) {
     }
 
     const handleSubmit = async() => {
-        console.log("Account Name: " + accountName);
-        console.log("Username: " + Username);
-        console.log("Password: " + Password);
-
         if (Username.length === 0 || Password.length === 0) {
             setError(true);
         } else {
@@ -72,7 +68,7 @@ export function EditAccountDialog({props}: {props: AccountViewModel}) {
 
     return (
         <React.Fragment>
-            {/* replace with table row */}
+
             <TableRow key={id} sx={{ cursor: 'pointer' }}>
                 <TableCell component="th" scope="row" onClick={handleClickOpen}>
                   {accountName}
@@ -82,11 +78,15 @@ export function EditAccountDialog({props}: {props: AccountViewModel}) {
                   {'*'.repeat(accountPassword.length)}
                 </TableCell>
                 <TableCell>
-                  <IconMenu account={{id: id, accountName: accountName, username: accountUsername, password: accountPassword}}/>
+                  <IconMenu account={{
+                        id: id, 
+                        accountName: accountName,
+                        accountUsername: accountUsername, 
+                        accountPassword: accountPassword
+                   }}/>
                 </TableCell>
             </TableRow>
 
-            {/* may use form for dialog */}
             <Dialog open={open} fullWidth={true}>
                 <DialogTitle>Edit Account</DialogTitle>
                 <DialogContent>
@@ -97,13 +97,14 @@ export function EditAccountDialog({props}: {props: AccountViewModel}) {
                             label="Account Name"
                             defaultValue={accountName}
                         />
+
                         <TextField 
                             label="Username"
                             defaultValue={accountUsername}
                             onChange={handleUsernameChange}
                             required 
                         />
-                        {/* need to choose between outlined input or textfield */}
+                        
                         <TextField
                             required
                             label="Password"
@@ -126,6 +127,7 @@ export function EditAccountDialog({props}: {props: AccountViewModel}) {
                     <Button type="submit" onClick={handleSubmit}>Submit</Button>
                 </DialogActions>
             </Dialog>
+            
         </React.Fragment>
     );
 }

@@ -23,7 +23,6 @@ export default function PasswordVault() {
       });
 
       const responseBody: ResponseGetAccount = await response.json();
-      console.log(responseBody.response);
       setAccounts(responseBody.response);
       setSearchResult(responseBody.response);
     }
