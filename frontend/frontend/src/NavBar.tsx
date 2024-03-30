@@ -28,7 +28,6 @@ export function NavBar() {
               </IconButton>
               
               <Button color="inherit" onClick={navigatePasswordVault}>Password Vault</Button>
-              <Button color="inherit">Notes Vault</Button>
               <Button color="inherit">Generator</Button>
             </Box>
             <Box>

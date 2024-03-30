@@ -7,7 +7,12 @@ import CloseIcon from '@mui/icons-material/Close';
 import { AccountViewModel } from "./types/Account";
 import { SnackbarMessage } from "./types/SnackBarMessage";
 
-export function IconMenu({ account }: { account: AccountViewModel }) {
+interface IconMenuProp {
+    account: AccountViewModel,
+    listId: number,
+    handleAccountChange: () => void
+}
+export function IconMenu({ account, listId ,handleAccountChange }: IconMenuProp) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -85,7 +90,8 @@ export function IconMenu({ account }: { account: AccountViewModel }) {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-            })
+            });
+            handleAccountChange();
             handleClickAlert("Account has been Deleted");
         } catch (error) {
             handleClickAlert("request can't be processed due to server problem");

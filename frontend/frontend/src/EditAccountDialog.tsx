@@ -5,12 +5,17 @@ import { IconMenu } from "./IconMenu";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
+interface editProps {
+    props: AccountViewModel,
+    listId: number,
+    handleAccountChange: () => void
+}
 /**
  * Table Row Clickable for edit account
  * @param props accountResult
  * @returns TSX element
  */
-export function EditAccountDialog({props}: {props: AccountViewModel}) {
+export function EditAccountDialog({props, listId, handleAccountChange}: editProps) {
     const { id, accountName, accountUsername, accountPassword } = props;
 
     const [open, setOpen] = React.useState(false);
@@ -46,6 +51,12 @@ export function EditAccountDialog({props}: {props: AccountViewModel}) {
         if (Username.length === 0 || Password.length === 0) {
             setError(true);
         } else {
+            const accountView: AccountViewModel = {
+                id: id,
+                accountName: accountName,
+                accountUsername: Username,
+                accountPassword: accountPassword
+            }
             await fetch("http://localhost:8080/api/account/update", {
                 method: 'PUT',
                 mode: 'cors',
@@ -53,22 +64,18 @@ export function EditAccountDialog({props}: {props: AccountViewModel}) {
                   'Accept': 'application/json',
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    id: id,
-                    accountName: accountName,
-                    accountUsername: Username,
-                    accountPassword: Password
-                }),
+                body: JSON.stringify(accountView),
                 credentials: 'include'
             })
+
+            
             setError(false);
             setOpen(false);
         }
     }
 
     return (
-        <React.Fragment>
-
+        <>
             <TableRow key={id} sx={{ cursor: 'pointer' }}>
                 <TableCell component="th" scope="row" onClick={handleClickOpen}>
                   {accountName}
@@ -78,12 +85,16 @@ export function EditAccountDialog({props}: {props: AccountViewModel}) {
                   {'*'.repeat(accountPassword.length)}
                 </TableCell>
                 <TableCell>
-                  <IconMenu account={{
-                        id: id, 
-                        accountName: accountName,
-                        accountUsername: accountUsername, 
-                        accountPassword: accountPassword
-                   }}/>
+                  <IconMenu 
+                        account={{
+                            id: id, 
+                            accountName: accountName,
+                            accountUsername: accountUsername, 
+                            accountPassword: accountPassword
+                        }}
+                        listId={listId}
+                        handleAccountChange={handleAccountChange}
+                    />
                 </TableCell>
             </TableRow>
 
@@ -128,6 +139,6 @@ export function EditAccountDialog({props}: {props: AccountViewModel}) {
                 </DialogActions>
             </Dialog>
             
-        </React.Fragment>
+        </>
     );
 }
