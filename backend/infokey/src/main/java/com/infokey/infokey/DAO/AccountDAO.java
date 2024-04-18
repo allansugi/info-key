@@ -4,19 +4,23 @@ import com.infokey.infokey.Model.Account;
 import com.infokey.infokey.Util.DBUtil;
 import com.infokey.infokey.ViewModel.AccountViewModel;
 import com.infokey.infokey.interfaces.DAO.IDAO;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class AccountDAO implements IDAO<Account> {
 
-    @Autowired
-    public AccountDAO() {
+    JdbcClient jdbcClient;
+    public AccountDAO(JdbcClient jdbcClient) {
         // Default Constructor
+        this.jdbcClient = jdbcClient;
     }
 
     @Override

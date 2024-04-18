@@ -3,7 +3,6 @@ package com.infokey.infokey.DAO;
 import com.infokey.infokey.Model.UserAccount;
 import com.infokey.infokey.Util.DBUtil;
 import com.infokey.infokey.interfaces.DAO.IDAO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -13,7 +12,6 @@ import java.util.List;
 @Repository
 public class UserDAO implements IDAO<UserAccount> {
 
-    @Autowired
     public UserDAO() {
         
     }

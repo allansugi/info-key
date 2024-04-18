@@ -10,7 +10,6 @@ import com.infokey.infokey.Model.UserAccount;
 import com.infokey.infokey.Template.UserPasswordValidator;
 import com.infokey.infokey.Util.JWTUtil;
 import com.infokey.infokey.interfaces.Service.IUserAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -20,8 +19,6 @@ import java.util.List;
 public class UserAccountService implements IUserAccountService {
 
     private final UserDAO dao;
-
-    @Autowired
     public UserAccountService(UserDAO dao) {
         this.dao = dao;
     }

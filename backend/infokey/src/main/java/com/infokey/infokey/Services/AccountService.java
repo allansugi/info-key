@@ -10,7 +10,6 @@ import com.infokey.infokey.Model.Response;
 import com.infokey.infokey.Util.JWTUtil;
 import com.infokey.infokey.ViewModel.AccountViewModel;
 import com.infokey.infokey.interfaces.Service.IAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -20,8 +19,6 @@ import java.util.List;
 public class AccountService implements IAccountService {
 
     private final AccountDAO dao;
-
-    @Autowired
     public AccountService(AccountDAO dao) {
         this.dao = dao;
     }

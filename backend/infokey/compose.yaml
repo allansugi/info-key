@@ -8,19 +8,19 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  server:
-    build:
-      context: .
-      target: development
-    ports:
-      - 8080:8080
-    volumes:
-      - .:/app/backend
-    depends_on:
-       db:
-         condition: service_healthy
-    networks:
-      - my-network
+#  server:
+#    build:
+#      context: .
+#      target: development
+#    ports:
+#      - 8080:8080
+#    volumes:
+#      - .:/app/backend
+#    depends_on:
+#       db:
+#         condition: service_healthy
+#    networks:
+#      - my-network
 
   db:
      image: mysql:8.0
@@ -31,8 +31,8 @@ services:
      environment:
        - MYSQL_ROOT_PASSWORD=secret
        - MYSQL_DATABASE=application
-     expose:
-       - 3306
+     ports:
+       - 3306:3306
      healthcheck:
        test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
        interval: 10s

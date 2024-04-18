@@ -10,10 +10,9 @@ import java.sql.SQLException;
 public class DBUtil {
 
     /**
-     * For storing user account and password account
-     * config according to docker compose file at the parent folder
+     * connecting to MySQL database
      */
-    private static final String URL = "jdbc:mysql://db:3306/application";
+    private static final String URL = "jdbc:mysql://localhost:3306/application";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "secret";
 

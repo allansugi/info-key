@@ -6,7 +6,6 @@ import com.infokey.infokey.Model.Response;
 import com.infokey.infokey.Services.AccountService;
 import com.infokey.infokey.ViewModel.AccountViewModel;
 import com.infokey.infokey.interfaces.Controller.IAccountController;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +19,6 @@ import java.util.List;
 public class AccountController implements IAccountController {
 
     private final AccountService service;
-
-    @Autowired
     public AccountController(AccountService service) {
         this.service = service;
     }
