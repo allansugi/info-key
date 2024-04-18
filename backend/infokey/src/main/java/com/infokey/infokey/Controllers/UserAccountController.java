@@ -29,9 +29,6 @@ public class UserAccountController implements IUserAccountController {
     @Override
     @PostMapping("/register")
     public ResponseEntity<Response<String>> register(@RequestBody RegisterForm form) throws SQLException, BadRequestException {
-        System.out.println(form.getEmail());
-        System.out.println(form.getUsername());
-        System.out.println(form.getPassword());
         Response<String> response = service.addUser(form);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

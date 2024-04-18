@@ -39,8 +39,7 @@ public class UserAccountService implements IUserAccountService {
                 response.setResponse("Registration successful");
                 return response;
             }
-            
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new SQLException("Database connection error");
         }
     }
