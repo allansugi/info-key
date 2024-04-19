@@ -1,7 +1,6 @@
 package com.infokey.infokey.interfaces.DAO;
 
 import java.sql.SQLException;
-import java.util.List;
 
 public interface IDAO<T> {
     void save(T item) throws SQLException;

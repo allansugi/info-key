@@ -1,8 +1,8 @@
 package com.infokey.infokey.Model;
 
-import java.util.UUID;
-
 import com.infokey.infokey.Form.RegisterForm;
+
+import java.util.UUID;
 
 public class UserAccount {
     private String id;
@@ -14,6 +14,12 @@ public class UserAccount {
         // Default constructor
     }
 
+    public UserAccount(String username, String email, String password, String id) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 
     /**
      * convert register form to user account to store into database
@@ -57,6 +63,4 @@ public class UserAccount {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    
 }

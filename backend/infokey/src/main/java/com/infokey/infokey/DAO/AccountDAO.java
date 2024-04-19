@@ -5,6 +5,7 @@ import com.infokey.infokey.ViewModel.AccountViewModel;
 import com.infokey.infokey.interfaces.DAO.IDAO;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -12,21 +13,23 @@ import java.util.List;
 @Repository
 public class AccountDAO implements IDAO<Account> {
 
-    JdbcClient jdbcClient;
+    private final JdbcClient jdbcClient;
     public AccountDAO(JdbcClient jdbcClient) {
         this.jdbcClient = jdbcClient;
     }
 
     @Override
     public void save(Account item) throws SQLException {
-        jdbcClient.sql("INSERT INTO account (id, userId, account_name, account_username, account_password) VALUES (?, ?, ?, ?, ?)")
+        int update = jdbcClient.sql("INSERT INTO account (id, userId, account_name, account_username, account_password) VALUES (?, ?, ?, ?, ?)")
                 .params(item.getId(), item.getUserId(), item.getAccount_name(), item.getAccount_username(), item.getAccount_password())
                 .update();
+
+        Assert.state(update == 1, "Failed to add account name " + item.getAccount_name() + " from" + item.getUserId());
     }
 
     @Override
     public void update(Account item) throws SQLException {
-        jdbcClient.sql(
+        int update = jdbcClient.sql(
                     """
                     UPDATE account
                     SET account_name = ?,
@@ -36,6 +39,8 @@ public class AccountDAO implements IDAO<Account> {
                     """)
                 .params(item.getAccount_name(), item.getAccount_username(), item.getAccount_password(), item.getId(), item.getUserId())
                 .update();
+
+        Assert.state(update == 1, "Failed to update Account " + item.getId());
     }
 
     @Override
@@ -48,9 +53,11 @@ public class AccountDAO implements IDAO<Account> {
 
     @Override
     public void delete(String id) throws SQLException {
-        jdbcClient.sql("DELETE FROM account where id = ?")
+        int updated = jdbcClient.sql("DELETE FROM account where id = ?")
                 .params(id)
                 .update();
+
+        Assert.state(updated == 1, "Failed to delete account " + id);
     }
 
     public List<AccountViewModel> findByUserId(String userId) throws SQLException {
