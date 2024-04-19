@@ -1,7 +1,6 @@
 package com.infokey.infokey.DAO;
 
 import com.infokey.infokey.Model.Account;
-import com.infokey.infokey.ViewModel.AccountViewModel;
 import com.infokey.infokey.interfaces.DAO.IDAO;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
@@ -60,10 +59,10 @@ public class AccountDAO implements IDAO<Account> {
         Assert.state(updated == 1, "Failed to delete account " + id);
     }
 
-    public List<AccountViewModel> findByUserId(String userId) {
+    public List<Account> findByUserId(String userId) {
         return jdbcClient.sql("SELECT * FROM account where userId = ?")
                 .params(userId)
-                .query(AccountViewModel.class)
+                .query(Account.class)
                 .list();
     }
     

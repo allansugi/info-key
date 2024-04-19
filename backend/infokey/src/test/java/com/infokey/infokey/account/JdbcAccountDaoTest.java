@@ -4,7 +4,6 @@ import com.infokey.infokey.DAO.AccountDAO;
 import com.infokey.infokey.DAO.UserDAO;
 import com.infokey.infokey.Model.Account;
 import com.infokey.infokey.Model.UserAccount;
-import com.infokey.infokey.ViewModel.AccountViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class JdbcAccountDaoTest {
     @Test
     void shouldAddNewAccount() {
         this.accountDao.save(new Account(UUID.randomUUID().toString(), userId, "account4", "account_username4", "accountpassword4"));
-        List<AccountViewModel> accounts = this.accountDao.findByUserId(this.userId);
+        List<Account> accounts = this.accountDao.findByUserId(this.userId);
         assertEquals(accounts.size(), 1);
     }
 
@@ -48,7 +47,7 @@ public class JdbcAccountDaoTest {
     void shouldFindAllAccountsByUserId() {
         this.accountDao.save(new Account(UUID.randomUUID().toString(), userId, "account1", "account_username1", "accountpassword1"));
         this.accountDao.save(new Account(UUID.randomUUID().toString(), userId, "account2", "account_username2", "accountpassword2"));
-        List<AccountViewModel> accounts = this.accountDao.findByUserId(this.userId);
+        List<Account> accounts = this.accountDao.findByUserId(this.userId);
         assertEquals(accounts.size(), 2);
     }
 
@@ -56,7 +55,7 @@ public class JdbcAccountDaoTest {
     void shouldNotFindAccountByDifferentUserId() {
         this.accountDao.save(new Account(UUID.randomUUID().toString(), userId, "account1", "account_username1", "accountpassword1"));
         this.accountDao.save(new Account(UUID.randomUUID().toString(), userId, "account2", "account_username2", "accountpassword2"));
-        List<AccountViewModel> accounts = this.accountDao.findByUserId("");
+        List<Account> accounts = this.accountDao.findByUserId("");
         assertEquals(accounts.size(), 0);
     }
 
@@ -80,11 +79,11 @@ public class JdbcAccountDaoTest {
     void shouldDeleteAccount() {
         String accountId = UUID.randomUUID().toString();
         this.accountDao.save(new Account(accountId, userId, "account4", "account_username4", "accountpassword4"));
-        List<AccountViewModel> accounts = this.accountDao.findByUserId(this.userId);
+        List<Account> accounts = this.accountDao.findByUserId(this.userId);
         assertEquals(accounts.size(), 1);
 
         this.accountDao.delete(accountId);
-        List<AccountViewModel> updatedAccounts = this.accountDao.findByUserId(this.userId);
+        List<Account> updatedAccounts = this.accountDao.findByUserId(this.userId);
         assertEquals(updatedAccounts.size(), 0);
     }
 
