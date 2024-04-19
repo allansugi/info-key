@@ -6,12 +6,10 @@ import com.infokey.infokey.Model.Response;
 import org.apache.coyote.BadRequestException;
 import org.apache.tomcat.websocket.AuthenticationException;
 
-import java.sql.SQLException;
-
 public interface IUserAccountService {
-    Response<String> addUser(RegisterForm form) throws SQLException, BadRequestException;
+    Response<String> addUser(RegisterForm form) throws BadRequestException;
 
-    Response<String> authenticate(LoginForm form) throws AuthenticationException, SQLException;
+    Response<String> authenticate(LoginForm form) throws AuthenticationException;
 
     Response<String> updatePassword(String token, String password);
 

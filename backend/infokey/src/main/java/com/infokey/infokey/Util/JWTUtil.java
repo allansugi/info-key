@@ -30,7 +30,7 @@ public class JWTUtil {
     /**
      * token only valid for 1 hour
      * @param token from header
-     * @return decoded token (userId)
+     * @return decoded token (userId) or null
      */
     public static String verifyToken(String token) {
         Algorithm algorithm = Algorithm.HMAC512(SECRET);

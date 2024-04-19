@@ -7,8 +7,8 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
-import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class AccountDAO implements IDAO<Account> {
@@ -19,7 +19,7 @@ public class AccountDAO implements IDAO<Account> {
     }
 
     @Override
-    public void save(Account item) throws SQLException {
+    public void save(Account item) {
         int update = jdbcClient.sql("INSERT INTO account (id, userId, account_name, account_username, account_password) VALUES (?, ?, ?, ?, ?)")
                 .params(item.getId(), item.getUserId(), item.getAccount_name(), item.getAccount_username(), item.getAccount_password())
                 .update();
@@ -28,7 +28,7 @@ public class AccountDAO implements IDAO<Account> {
     }
 
     @Override
-    public void update(Account item) throws SQLException {
+    public void update(Account item, String id) {
         int update = jdbcClient.sql(
                     """
                     UPDATE account
@@ -37,22 +37,22 @@ public class AccountDAO implements IDAO<Account> {
                         account_password = ?
                     WHERE id = ? AND userId = ?
                     """)
-                .params(item.getAccount_name(), item.getAccount_username(), item.getAccount_password(), item.getId(), item.getUserId())
+                .params(item.getAccount_name(), item.getAccount_username(), item.getAccount_password(), id, item.getUserId())
                 .update();
 
-        Assert.state(update == 1, "Failed to update Account " + item.getId());
+        Assert.state(update == 1, "Failed to update Account " + id);
     }
 
     @Override
-    public Account findById(String id) throws SQLException {
+    public Optional<Account> findById(String id) {
         return jdbcClient.sql("SELECT * FROM account where id = ?")
                 .params(id)
                 .query(Account.class)
-                .single();
+                .optional();
     }
 
     @Override
-    public void delete(String id) throws SQLException {
+    public void delete(String id) {
         int updated = jdbcClient.sql("DELETE FROM account where id = ?")
                 .params(id)
                 .update();
@@ -60,7 +60,7 @@ public class AccountDAO implements IDAO<Account> {
         Assert.state(updated == 1, "Failed to delete account " + id);
     }
 
-    public List<AccountViewModel> findByUserId(String userId) throws SQLException {
+    public List<AccountViewModel> findByUserId(String userId) {
         return jdbcClient.sql("SELECT * FROM account where userId = ?")
                 .params(userId)
                 .query(AccountViewModel.class)

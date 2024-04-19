@@ -5,6 +5,9 @@ import com.infokey.infokey.Model.Account;
 
 import java.util.UUID;
 
+/**
+ * takes AccountForm and userId
+ */
 public class AccountFormAdapter {
     private final AccountForm form;
     private final String userId;

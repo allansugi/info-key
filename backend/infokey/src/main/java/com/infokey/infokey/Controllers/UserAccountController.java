@@ -8,13 +8,9 @@ import com.infokey.infokey.Services.UserAccountService;
 import com.infokey.infokey.interfaces.Controller.IUserAccountController;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.coyote.BadRequestException;
-import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.SQLException;
 
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true" )
 @RestController
@@ -28,14 +24,14 @@ public class UserAccountController implements IUserAccountController {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<Response<String>> register(@RequestBody RegisterForm form) throws SQLException, BadRequestException {
+    public ResponseEntity<Response<String>> register(@RequestBody RegisterForm form) {
         Response<String> response = service.addUser(form);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Override
     @PutMapping("/login")
-    public ResponseEntity<Response<String>> login(@RequestBody LoginForm form, HttpServletResponse res) throws AuthenticationException, SQLException {
+    public ResponseEntity<Response<String>> login(@RequestBody LoginForm form, HttpServletResponse res) {
         Response<String> response = service.authenticate(form);
         String token = response.getResponse();
         Cookie cookie = new Cookie("token", token);

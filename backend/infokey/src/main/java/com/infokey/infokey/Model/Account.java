@@ -11,6 +11,14 @@ public class Account {
         // Default constructor
     }
 
+    public Account(String id, String userId, String account_name, String account_username, String account_password) {
+        this.id = id;
+        this.userId = userId;
+        this.account_name = account_name;
+        this.account_username = account_username;
+        this.account_password = account_password;
+    }
+
     public String getAccount_name() {
         return account_name;
     }

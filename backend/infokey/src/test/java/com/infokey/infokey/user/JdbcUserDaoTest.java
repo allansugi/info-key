@@ -11,8 +11,10 @@ import org.springframework.context.annotation.Import;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @JdbcTest
 @Import(UserDAO.class)
@@ -47,13 +49,15 @@ public class JdbcUserDaoTest {
         String id = account.getId();
 
         dao.save(account);
-        dao.update(new UserAccount("newuser1","newuser1@gmail.com", "newPassword_1", id));
-        UserAccount updatedAccount = dao.findById(id);
+        dao.update(new UserAccount("newuser1","newuser1@gmail.com", "newPassword_1", id), id);
+        Optional<UserAccount> updatedAccount = dao.findById(id);
+        assertTrue(updatedAccount.isPresent());
+        UserAccount verifiedUpdatedAccount = updatedAccount.get();
 
-        assertEquals(updatedAccount.getId(), id);
-        assertEquals(updatedAccount.getEmail(), "newuser1@gmail.com");
-        assertEquals(updatedAccount.getUsername(), "newuser1");
-        assertEquals(updatedAccount.getPassword(), "newPassword_1");
+        assertEquals(verifiedUpdatedAccount.getId(), id);
+        assertEquals(verifiedUpdatedAccount.getEmail(), "newuser1@gmail.com");
+        assertEquals(verifiedUpdatedAccount.getUsername(), "newuser1");
+        assertEquals(verifiedUpdatedAccount.getPassword(), "newPassword_1");
     }
 
     @Test
@@ -68,5 +72,11 @@ public class JdbcUserDaoTest {
         dao.delete(id);
         List<UserAccount> updatedUserAccounts = dao.findAll();
         assertEquals(3, updatedUserAccounts.size());
+    }
+
+    @Test
+    void wrongIdShouldNotFindAccount() {
+        Optional<UserAccount> account = dao.findById("");
+        assertTrue(account.isEmpty());
     }
 }

@@ -1,8 +1,6 @@
 package com.infokey.infokey.interfaces.Controller;
 
 import com.infokey.infokey.Form.AccountForm;
-import com.infokey.infokey.Form.UpdateAccountForm;
-import com.infokey.infokey.Model.Account;
 import com.infokey.infokey.Model.Response;
 import com.infokey.infokey.ViewModel.AccountViewModel;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +14,7 @@ import java.util.List;
 public interface IAccountController {
     ResponseEntity<Response<String>> insertNewAccount(@CookieValue String token, AccountForm form);
 
-    ResponseEntity<Response<String>> updateExistingAccount(@CookieValue String token, @RequestBody UpdateAccountForm account) throws SQLException;
+    ResponseEntity<Response<String>> updateExistingAccount(@CookieValue String token, @RequestBody AccountForm account, @PathVariable String id) throws SQLException;
 
     ResponseEntity<Response<String>> deleteAccount(@CookieValue String token, @PathVariable String accountId) throws SQLException;
 
