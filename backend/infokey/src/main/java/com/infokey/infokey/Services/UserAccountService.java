@@ -7,7 +7,7 @@ import com.infokey.infokey.Form.LoginForm;
 import com.infokey.infokey.Form.RegisterForm;
 import com.infokey.infokey.Model.Response;
 import com.infokey.infokey.Model.UserAccount;
-import com.infokey.infokey.Template.UserPasswordValidator;
+import com.infokey.infokey.Template.UserAccountPasswordRequirementValidator;
 import com.infokey.infokey.Util.JWTUtil;
 import com.infokey.infokey.interfaces.Service.IUserAccountService;
 import org.springframework.stereotype.Service;
@@ -26,9 +26,9 @@ public class UserAccountService implements IUserAccountService {
     public Response<String> addUser(RegisterForm form) throws IllegalRegisterException {
         Response<String> response = new Response<>();
         UserAccount account = new UserAccount(form);
-        UserPasswordValidator validator = new UserPasswordValidator(account.getPassword());
+        String password = account.getPassword();
 
-        if (!validator.validPassword()) {
+        if (!UserAccountPasswordRequirementValidator.isValid(password)) {
             throw new IllegalRegisterException("Password does not meet the requirement");
         } else {
             dao.save(account);

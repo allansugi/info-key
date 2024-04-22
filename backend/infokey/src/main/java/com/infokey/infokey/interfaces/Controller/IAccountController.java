@@ -1,8 +1,8 @@
 package com.infokey.infokey.interfaces.Controller;
 
 import com.infokey.infokey.Form.AccountForm;
+import com.infokey.infokey.Model.Account;
 import com.infokey.infokey.Model.Response;
-import com.infokey.infokey.ViewModel.AccountViewModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,5 +18,5 @@ public interface IAccountController {
 
     ResponseEntity<Response<String>> deleteAccount(@CookieValue String token, @PathVariable String accountId) throws SQLException;
 
-    ResponseEntity<Response<List<AccountViewModel>>> findUserAccounts(@CookieValue String token) throws SQLException;
+    ResponseEntity<Response<List<Account>>> findUserAccounts(@CookieValue String token) throws SQLException;
 }

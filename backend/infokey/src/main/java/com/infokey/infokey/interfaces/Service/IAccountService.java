@@ -1,8 +1,8 @@
 package com.infokey.infokey.interfaces.Service;
 
 import com.infokey.infokey.Form.AccountForm;
+import com.infokey.infokey.Model.Account;
 import com.infokey.infokey.Model.Response;
-import com.infokey.infokey.ViewModel.AccountViewModel;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ public interface IAccountService {
 
     Response<String> deleteAccount(String token, String accountId);
 
-    Response<List<AccountViewModel>> findUserAccounts(String token);
+    Response<List<Account>> findUserAccounts(String token);
 }

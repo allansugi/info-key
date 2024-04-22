@@ -1,9 +1,9 @@
 package com.infokey.infokey.Controllers;
 
 import com.infokey.infokey.Form.AccountForm;
+import com.infokey.infokey.Model.Account;
 import com.infokey.infokey.Model.Response;
 import com.infokey.infokey.Services.AccountService;
-import com.infokey.infokey.ViewModel.AccountViewModel;
 import com.infokey.infokey.interfaces.Controller.IAccountController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,9 +44,9 @@ public class AccountController implements IAccountController {
 
     @Override
     @GetMapping("/find/accounts")
-    public ResponseEntity<Response<List<AccountViewModel>>> findUserAccounts(@CookieValue String token) {
+    public ResponseEntity<Response<List<Account>>> findUserAccounts(@CookieValue String token) {
         System.out.println("token: " + token);
-        Response<List<AccountViewModel>> response= this.service.findUserAccounts(token);
+        Response<List<Account>> response= this.service.findUserAccounts(token);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

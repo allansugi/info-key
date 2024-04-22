@@ -6,7 +6,6 @@ import com.infokey.infokey.Form.AccountForm;
 import com.infokey.infokey.Model.Account;
 import com.infokey.infokey.Model.Response;
 import com.infokey.infokey.Util.JWTUtil;
-import com.infokey.infokey.ViewModel.AccountViewModel;
 import com.infokey.infokey.interfaces.Service.IAccountService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -59,11 +58,11 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public Response<List<AccountViewModel>> findUserAccounts(String token) {
+    public Response<List<Account>> findUserAccounts(String token) {
         String userId = JWTUtil.verifyToken(token);
         Assert.notNull(userId, "empty token or token cannot be verified");
-        List<AccountViewModel> accounts = this.dao.findByUserId(userId);
-        Response<List<AccountViewModel>> response = new Response<>();
+        List<Account> accounts = this.dao.findByUserId(userId);
+        Response<List<Account>> response = new Response<>();
         response.setSuccess(true);
         response.setResponse(accounts);
         return response;
