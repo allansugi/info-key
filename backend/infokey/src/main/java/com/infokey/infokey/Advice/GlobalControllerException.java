@@ -2,7 +2,7 @@ package com.infokey.infokey.Advice;
 
 import com.infokey.infokey.Exceptions.IllegalRegisterException;
 import com.infokey.infokey.Exceptions.LoginNotFoundException;
-import com.infokey.infokey.Model.Response;
+import com.infokey.infokey.Response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -42,16 +42,6 @@ public class GlobalControllerException {
         response.setResponse(ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-//    @ExceptionHandler(RegisterArgumentException.class)
-//    @ResponseStatus(HttpStatus.CONFLICT)
-//    @ResponseBody
-//    public ResponseEntity<Response<String>> handleRegisterArgumentException(RegisterArgumentException ex) {
-//        Response<String> response = new Response<>();
-//        response.setSuccess(false);
-//        response.setResponse(ex.getMessage());
-//        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
-//    }
 
     /**
      * Error for invalid credential

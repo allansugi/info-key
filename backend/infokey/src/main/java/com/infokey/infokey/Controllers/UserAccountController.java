@@ -1,9 +1,9 @@
 package com.infokey.infokey.Controllers;
 
 import com.infokey.infokey.Form.LoginForm;
-import com.infokey.infokey.Form.RegisterForm;
 import com.infokey.infokey.Form.UpdateAccountForm;
-import com.infokey.infokey.Model.Response;
+import com.infokey.infokey.Response.Response;
+import com.infokey.infokey.DTO.UserAccount;
 import com.infokey.infokey.Services.UserAccountService;
 import com.infokey.infokey.interfaces.Controller.IUserAccountController;
 import jakarta.servlet.http.Cookie;
@@ -24,8 +24,8 @@ public class UserAccountController implements IUserAccountController {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<Response<String>> register(@RequestBody RegisterForm form) {
-        Response<String> response = service.addUser(form);
+    public ResponseEntity<Response<String>> register(@RequestBody UserAccount account) {
+        Response<String> response = service.addUser(account);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

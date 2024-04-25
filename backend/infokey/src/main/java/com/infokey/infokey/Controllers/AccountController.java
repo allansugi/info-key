@@ -1,8 +1,8 @@
 package com.infokey.infokey.Controllers;
 
 import com.infokey.infokey.Form.AccountForm;
-import com.infokey.infokey.Model.Account;
-import com.infokey.infokey.Model.Response;
+import com.infokey.infokey.DTO.Account;
+import com.infokey.infokey.Response.Response;
 import com.infokey.infokey.Services.AccountService;
 import com.infokey.infokey.interfaces.Controller.IAccountController;
 import org.springframework.http.HttpStatus;
@@ -22,9 +22,8 @@ public class AccountController implements IAccountController {
 
     @Override
     @PostMapping("/add")
-    public ResponseEntity<Response<String>> insertNewAccount(@CookieValue String token, @RequestBody AccountForm form) {
-        System.out.println(form.toString());
-        Response<String> response = this.service.addAccount(token, form);
+    public ResponseEntity<Response<String>> insertNewAccount(@CookieValue String token, @RequestBody AccountForm account) {
+        Response<String> response = this.service.addAccount(token, account);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

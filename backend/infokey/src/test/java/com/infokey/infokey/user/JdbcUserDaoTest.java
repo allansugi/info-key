@@ -2,7 +2,7 @@ package com.infokey.infokey.user;
 
 import com.infokey.infokey.DAO.UserDAO;
 import com.infokey.infokey.Form.RegisterForm;
-import com.infokey.infokey.Model.UserAccount;
+import com.infokey.infokey.DTO.UserAccount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,8 +2,8 @@ package com.infokey.infokey.account;
 
 import com.infokey.infokey.DAO.AccountDAO;
 import com.infokey.infokey.DAO.UserDAO;
-import com.infokey.infokey.Model.Account;
-import com.infokey.infokey.Model.UserAccount;
+import com.infokey.infokey.DTO.Account;
+import com.infokey.infokey.DTO.UserAccount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

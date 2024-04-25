@@ -1,4 +1,4 @@
-package com.infokey.infokey.Model;
+package com.infokey.infokey.Response;
 
 public class Response<T> {
     private Boolean success;

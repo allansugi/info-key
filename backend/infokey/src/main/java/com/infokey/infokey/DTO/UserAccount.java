@@ -1,4 +1,4 @@
-package com.infokey.infokey.Model;
+package com.infokey.infokey.DTO;
 
 import com.infokey.infokey.Form.RegisterForm;
 
@@ -9,10 +9,6 @@ public class UserAccount {
     private String username;
     private String email;
     private String password;
-
-    public UserAccount() {
-        // Default constructor
-    }
 
     public UserAccount(String username, String email, String password, String id) {
         this.id = id;

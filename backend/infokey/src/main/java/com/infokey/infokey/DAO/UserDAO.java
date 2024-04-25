@@ -1,6 +1,6 @@
 package com.infokey.infokey.DAO;
 
-import com.infokey.infokey.Model.UserAccount;
+import com.infokey.infokey.DTO.UserAccount;
 import com.infokey.infokey.interfaces.DAO.IDAO;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
