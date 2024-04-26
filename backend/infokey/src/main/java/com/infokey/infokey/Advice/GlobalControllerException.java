@@ -22,9 +22,7 @@ public class GlobalControllerException {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ResponseEntity<Response<String>> handleBadRequestException(IllegalRegisterException ex) {
-        Response<String> response = new Response<>();
-        response.setSuccess(false);
-        response.setResponse(ex.getMessage());
+        Response<String> response = new Response<>(false, ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -37,9 +35,7 @@ public class GlobalControllerException {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public ResponseEntity<Response<String>> handleDatabaseErrorException(Exception ex) {
-        Response<String> response = new Response<>();
-        response.setSuccess(false);
-        response.setResponse(ex.getMessage());
+        Response<String> response = new Response<>(false, ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -52,9 +48,7 @@ public class GlobalControllerException {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
     public ResponseEntity<Response<String>> handleAuthenticationException(LoginNotFoundException ex) {
-        Response<String> response = new Response<>();
-        response.setSuccess(false);
-        response.setResponse(ex.getMessage());
+        Response<String> response = new Response<>(false, ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 }

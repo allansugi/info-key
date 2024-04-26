@@ -3,6 +3,7 @@ package com.infokey.infokey.account;
 import com.infokey.infokey.DAO.AccountDAO;
 import com.infokey.infokey.DTO.Account;
 import com.infokey.infokey.Form.AccountForm;
+import com.infokey.infokey.Mapper.AccountMapper;
 import com.infokey.infokey.Response.Response;
 import com.infokey.infokey.Services.AccountService;
 import com.infokey.infokey.Util.JWTUtil;
@@ -25,6 +26,8 @@ public class AccountServiceTest {
     AccountDAO dao;
     @Mock
     JWTUtil jwt;
+    @Mock
+    AccountMapper mapper;
     @InjectMocks
     AccountService service;
 

@@ -1,12 +1,15 @@
 package com.infokey.infokey.user;
 
 import com.infokey.infokey.DAO.UserDAO;
+import com.infokey.infokey.DTO.UserAccount;
 import com.infokey.infokey.Exceptions.IllegalRegisterException;
 import com.infokey.infokey.Exceptions.LoginNotFoundException;
 import com.infokey.infokey.Form.LoginForm;
+import com.infokey.infokey.Form.RegisterForm;
+import com.infokey.infokey.Mapper.UserAccountMapper;
 import com.infokey.infokey.Response.Response;
-import com.infokey.infokey.DTO.UserAccount;
 import com.infokey.infokey.Services.UserAccountService;
+import com.infokey.infokey.Util.JWTUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +29,10 @@ public class UserServiceTest {
 
     @Mock
     UserDAO dao;
-
+    @Mock
+    UserAccountMapper mapper;
+    @Mock
+    JWTUtil util;
     @InjectMocks
     UserAccountService service;
 
@@ -48,23 +54,22 @@ public class UserServiceTest {
     }
 
     @Test
-    void shouldGetSuccessfulResponseWithValidPassword() {
-        UserAccount account = new UserAccount("username2",
-                "username2@email.com",
-                "ValidPassword_1", UUID.randomUUID().toString());
+    void shouldGetSuccessfulResponseRegisterWithValidPassword() {
 
-        Response<String> response = service.addUser(account);
+        RegisterForm form = new RegisterForm("username2", "username2@email.com", "ValidPassword_1");
+        when(mapper.toDTO(form)).thenReturn(new UserAccount("username2",
+                                                        "username2@email.com",
+                                                        "ValidPassword_1",
+                                                        UUID.randomUUID().toString()));
+        Response<String> response = service.addUser(form);
         assertTrue(response.getSuccess(), "invalid requirement");
         assertEquals(response.getResponse(), "Registration successful");
     }
 
     @Test
     void shouldGetIllegalRegisterExceptionWithNoUppercase() {
-        UserAccount account = new UserAccount("username2",
-                "username2@email.com",
-                "validpassword_1", UUID.randomUUID().toString());
-
-        Exception exception = assertThrows(IllegalRegisterException.class, () -> service.addUser(account));
+        RegisterForm form = new RegisterForm("username2", "username2@email.com", "validpassword_1");
+        Exception exception = assertThrows(IllegalRegisterException.class, () -> service.addUser(form));
         String exceptionMessage = exception.getMessage();
         String expectedMessage = "Password does not meet the requirement";
 
@@ -73,11 +78,8 @@ public class UserServiceTest {
 
     @Test
     void shouldGetIllegalRegisterExceptionWithNoLowercase() {
-        UserAccount account = new UserAccount("username2",
-                "username2@email.com",
-                "VALIDPASSWORD_1", UUID.randomUUID().toString());
-
-        Exception exception = assertThrows(IllegalRegisterException.class, () -> service.addUser(account));
+        RegisterForm form = new RegisterForm("username2", "username2@email.com", "VALIDPASSWORD_1");
+        Exception exception = assertThrows(IllegalRegisterException.class, () -> service.addUser(form));
         String exceptionMessage = exception.getMessage();
         String expectedMessage = "Password does not meet the requirement";
 
@@ -86,11 +88,8 @@ public class UserServiceTest {
 
     @Test
     void shouldGetIllegalRegisterExceptionWithNoDigit() {
-        UserAccount account = new UserAccount("username2",
-                "username2@email.com",
-                "ValidPassword&", UUID.randomUUID().toString());
-
-        Exception exception = assertThrows(IllegalRegisterException.class, () -> service.addUser(account));
+        RegisterForm form = new RegisterForm("username2", "username2@email.com", "ValidPassword&");
+        Exception exception = assertThrows(IllegalRegisterException.class, () -> service.addUser(form));
         String exceptionMessage = exception.getMessage();
         String expectedMessage = "Password does not meet the requirement";
 
@@ -99,11 +98,9 @@ public class UserServiceTest {
 
     @Test
     void shouldGetIllegalRegisterExceptionWithNoSpecialCharacter() {
-        UserAccount account = new UserAccount("username2",
-                "username2@email.com",
-                "ValidPassword1", UUID.randomUUID().toString());
 
-        Exception exception = assertThrows(IllegalRegisterException.class, () -> service.addUser(account));
+        RegisterForm form = new RegisterForm("username2", "username2@email.com", "ValidPassword1");
+        Exception exception = assertThrows(IllegalRegisterException.class, () -> service.addUser(form));
         String exceptionMessage = exception.getMessage();
         String expectedMessage = "Password does not meet the requirement";
 

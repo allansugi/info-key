@@ -1,7 +1,6 @@
 package com.infokey.infokey.user;
 
 import com.infokey.infokey.DAO.UserDAO;
-import com.infokey.infokey.Form.RegisterForm;
 import com.infokey.infokey.DTO.UserAccount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.springframework.context.annotation.Import;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,27 +25,27 @@ public class JdbcUserDaoTest {
 
     @BeforeEach
     void setup() throws SQLException {
-        dao.save(new UserAccount(new RegisterForm("user1", "user1@gmail.com", "Password_1")));
-        dao.save(new UserAccount(new RegisterForm("user2", "user2@gmail.com", "Password_2")));
-        dao.save(new UserAccount(new RegisterForm("user3", "user3@gmail.com", "Password_3")));
+        dao.save(new UserAccount("user1", "user1@gmail.com", "Password_1", UUID.randomUUID().toString()));
+        dao.save(new UserAccount("user2", "user2@gmail.com", "Password_2", UUID.randomUUID().toString()));
+        dao.save(new UserAccount("user3", "user3@gmail.com", "Password_3", UUID.randomUUID().toString()));
     }
 
     @Test
-    void shouldFindAllUsers() throws SQLException {
+    void shouldFindAllUsers() {
         List<UserAccount> userAccounts = dao.findAll();
         assertEquals(3, userAccounts.size());
     }
 
     @Test
     void shouldCreateNewUserAccount() throws SQLException {
-        dao.save(new UserAccount(new RegisterForm("user4", "user4@gmail.com", "Password_4")));
+        dao.save(new UserAccount("user4", "user4@gmail.com", "Password_4", UUID.randomUUID().toString()));
         List<UserAccount> userAccounts = dao.findAll();
         assertEquals(4, userAccounts.size());
     }
 
     @Test
     void shouldUpdateUserAccountInfo() throws SQLException {
-        UserAccount account = new UserAccount(new RegisterForm("user1", "user1@gmail.com", "Password_1"));
+        UserAccount account = new UserAccount("user1", "user1@gmail.com", "Password_1", UUID.randomUUID().toString());
         String id = account.getId();
 
         dao.save(account);
@@ -62,7 +62,7 @@ public class JdbcUserDaoTest {
 
     @Test
     void shouldDeleteAnAccount() throws SQLException {
-        UserAccount account = new UserAccount(new RegisterForm("user4", "user4@gmail.com", "Password_4"));
+        UserAccount account = new UserAccount("user4", "user4@gmail.com", "Password_4", UUID.randomUUID().toString());
         String id = account.getId();
 
         dao.save(account);

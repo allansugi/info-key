@@ -1,9 +1,5 @@
 package com.infokey.infokey.DTO;
 
-import com.infokey.infokey.Form.RegisterForm;
-
-import java.util.UUID;
-
 public class UserAccount {
     private String id;
     private String username;
@@ -15,17 +11,6 @@ public class UserAccount {
         this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    /**
-     * convert register form to user account to store into database
-     * @param form
-     */
-    public UserAccount(RegisterForm form) {
-        this.id = UUID.randomUUID().toString();
-        this.username = form.getUsername();
-        this.email = form.getEmail();
-        this.password = form.getPassword();
     }
 
     public String getId() {
