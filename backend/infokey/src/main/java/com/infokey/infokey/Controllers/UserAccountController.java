@@ -6,7 +6,6 @@ import com.infokey.infokey.Form.UpdateAccountForm;
 import com.infokey.infokey.Response.Response;
 import com.infokey.infokey.Services.UserAccountService;
 import com.infokey.infokey.interfaces.Controller.IUserAccountController;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,22 +23,14 @@ public class UserAccountController implements IUserAccountController {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<Response<String>> register(@RequestBody RegisterForm form) {
-        Response<String> response = service.addUser(form);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public ResponseEntity<Response<String>> register(@RequestBody RegisterForm form) throws Exception {
+        return new ResponseEntity<>(service.addUser(form), HttpStatus.CREATED);
     }
 
     @Override
     @PutMapping("/login")
-    public ResponseEntity<Response<String>> login(@RequestBody LoginForm form, HttpServletResponse res) {
-        Response<String> response = service.authenticate(form);
-        String token = response.getResponse();
-        Cookie cookie = new Cookie("token", token);
-        cookie.setPath("/");
-        res.addCookie(cookie);
-        response.setResponse("login success");
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<Response<String>> login(@RequestBody LoginForm form, HttpServletResponse res) throws Exception {
+        return new ResponseEntity<>(service.authenticate(form, res), HttpStatus.OK);
     }
 
     /**
@@ -50,4 +41,5 @@ public class UserAccountController implements IUserAccountController {
     public ResponseEntity<Response<String>> updateUsername(@CookieValue String token, @RequestBody UpdateAccountForm form) {
         return null;
     }
+
 }

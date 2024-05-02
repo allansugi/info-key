@@ -19,7 +19,7 @@ public class AccountDAO implements IDAO<Account> {
 
     @Override
     public void save(Account item) {
-        int update = jdbcClient.sql("INSERT INTO account (id, userId, account_name, account_username, account_password) VALUES (?, ?, ?, ?, ?)")
+        int update = jdbcClient.sql("INSERT INTO vault_account (id, userId, account_name, account_username, account_password) VALUES (?, ?, ?, ?, ?)")
                 .params(item.getId(), item.getUserId(), item.getAccount_name(), item.getAccount_username(), item.getAccount_password())
                 .update();
 
@@ -30,7 +30,7 @@ public class AccountDAO implements IDAO<Account> {
     public void update(Account item, String id) {
         int update = jdbcClient.sql(
                     """
-                    UPDATE account
+                    UPDATE vault_account
                     SET account_name = ?,
                         account_username = ?,
                         account_password = ?
@@ -44,7 +44,7 @@ public class AccountDAO implements IDAO<Account> {
 
     @Override
     public Optional<Account> findById(String id) {
-        return jdbcClient.sql("SELECT * FROM account where id = ?")
+        return jdbcClient.sql("SELECT * FROM vault_account where id = ?")
                 .params(id)
                 .query(Account.class)
                 .optional();
@@ -52,7 +52,7 @@ public class AccountDAO implements IDAO<Account> {
 
     @Override
     public void delete(String id) {
-        int updated = jdbcClient.sql("DELETE FROM account where id = ?")
+        int updated = jdbcClient.sql("DELETE FROM vault_account where id = ?")
                 .params(id)
                 .update();
 
@@ -60,7 +60,7 @@ public class AccountDAO implements IDAO<Account> {
     }
 
     public List<Account> findByUserId(String userId) {
-        return jdbcClient.sql("SELECT * FROM account where userId = ?")
+        return jdbcClient.sql("SELECT * FROM vault_account where userId = ?")
                 .params(userId)
                 .query(Account.class)
                 .list();

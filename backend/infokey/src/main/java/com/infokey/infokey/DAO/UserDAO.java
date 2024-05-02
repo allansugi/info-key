@@ -19,7 +19,7 @@ public class UserDAO implements IDAO<UserAccount> {
 
     @Override
     public void save(UserAccount item) {
-        int update = jdbcClient.sql("INSERT INTO \"user\" (id, username, email, password) VALUES (?, ?, ?, ?)")
+        int update = jdbcClient.sql("INSERT INTO user_account (id, username, email, password) VALUES (?, ?, ?, ?)")
                 .params(item.getId(), item.getUsername(), item.getEmail(), item.getPassword())
                 .update();
 
@@ -28,7 +28,7 @@ public class UserDAO implements IDAO<UserAccount> {
 
     @Override
     public void update(UserAccount item, String id) {
-        int update = jdbcClient.sql("UPDATE \"user\" SET email = ?, username = ?, password = ? WHERE id = ?")
+        int update = jdbcClient.sql("UPDATE user_account SET email = ?, username = ?, password = ? WHERE id = ?")
                 .params(item.getEmail(), item.getUsername(), item.getPassword(), item.getId())
                 .update();
 
@@ -37,7 +37,7 @@ public class UserDAO implements IDAO<UserAccount> {
 
     @Override
     public Optional<UserAccount> findById(String id) {
-        return jdbcClient.sql("SELECT * FROM \"user\" where id = ?")
+        return jdbcClient.sql("SELECT * FROM user_account where id = ?")
                 .params(id)
                 .query(UserAccount.class)
                 .optional();
@@ -45,7 +45,7 @@ public class UserDAO implements IDAO<UserAccount> {
 
     @Override
     public void delete(String id) {
-        int update = jdbcClient.sql("DELETE FROM \"user\" where id = ?")
+        int update = jdbcClient.sql("DELETE FROM user_account where id = ?")
                 .params(id)
                 .update();
 
@@ -53,7 +53,7 @@ public class UserDAO implements IDAO<UserAccount> {
     }
 
     public List<UserAccount> findAll() {
-            return jdbcClient.sql("SELECT * FROM \"user\"")
+            return jdbcClient.sql("SELECT * FROM user_account")
                     .query(UserAccount.class)
                     .list();
     }

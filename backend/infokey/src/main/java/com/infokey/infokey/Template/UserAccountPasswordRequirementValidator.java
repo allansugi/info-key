@@ -1,5 +1,7 @@
 package com.infokey.infokey.Template;
 
+import org.springframework.stereotype.Component;
+
 /**
  * password requirements:
  * 1. lowercase letter
@@ -7,6 +9,7 @@ package com.infokey.infokey.Template;
  * 3. special character
  * 4. minimum length of 8
  */
+@Component
 public class UserAccountPasswordRequirementValidator {
     public static boolean isValid(String password) {
         boolean validLength = password.length() >= 8 && password.length() <= 20;

@@ -36,7 +36,7 @@ public class AccountController implements IAccountController {
 
     @Override
     @DeleteMapping("/delete/{accountId}")
-    public ResponseEntity<Response<String>> deleteAccount(@CookieValue String token, String accountId) {
+    public ResponseEntity<Response<String>> deleteAccount(@CookieValue String token, @PathVariable String accountId) {
         Response<String> response = this.service.deleteAccount(token, accountId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -44,7 +44,6 @@ public class AccountController implements IAccountController {
     @Override
     @GetMapping("/find/accounts")
     public ResponseEntity<Response<List<Account>>> findUserAccounts(@CookieValue String token) {
-        System.out.println("token: " + token);
         Response<List<Account>> response= this.service.findUserAccounts(token);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

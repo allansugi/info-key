@@ -1,4 +1,4 @@
-CREATE TABLE user (
+CREATE TABLE IF NOT EXISTS user_account (
     id varchar(36) NOT NULL,
     username text,
     email text,
@@ -6,12 +6,12 @@ CREATE TABLE user (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE account (
+CREATE TABLE IF NOT EXISTS vault_account (
     id varchar(36),
     userId varchar(36),
     account_name text,
     account_username text,
     account_password text,
     PRIMARY KEY (id),
-    FOREIGN KEY (userId) REFERENCES user(id) ON DELETE CASCADE
+    FOREIGN KEY (userId) REFERENCES user_account(id) ON DELETE CASCADE
 );
