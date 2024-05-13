@@ -13,13 +13,17 @@ public class JWTUtil {
     private static final int TIME_EXPIRY = 3600;
     private static final String ISSUER = "auth0";
 
+    public JWTUtil() {
+
+    }
+
     /**
      * uses HMAC512 algorithm which is supported by auth0 JWT
      * for more information, visit <a href="https://github.com/auth0/java-jwt">...</a>
      * @param id userId
      * @return new token
      */
-    public static String createToken(String id) {
+    public String createToken(String id) {
         Algorithm algorithm = Algorithm.HMAC512(SECRET);
         return JWT.create()
                     .withIssuer(ISSUER)
@@ -30,9 +34,9 @@ public class JWTUtil {
     /**
      * token only valid for 1 hour
      * @param token from header
-     * @return decoded token (userId)
+     * @return decoded token (userId) or null
      */
-    public static String verifyToken(String token) {
+    public String verifyToken(String token) {
         Algorithm algorithm = Algorithm.HMAC512(SECRET);
         JWTVerifier verifier = JWT.require(algorithm)
                                     .acceptLeeway(TIME_EXPIRY)
@@ -41,6 +45,4 @@ public class JWTUtil {
         DecodedJWT decodedJWT = verifier.verify(token);
         return decodedJWT.getClaim(ACCESS_CLAIM).asString();
     }
-
-    private JWTUtil() {}
 }

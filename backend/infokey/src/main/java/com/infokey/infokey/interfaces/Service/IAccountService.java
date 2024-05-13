@@ -1,18 +1,18 @@
 package com.infokey.infokey.interfaces.Service;
 
-import java.sql.SQLException;
+import com.infokey.infokey.Form.AccountForm;
+import com.infokey.infokey.DTO.Account;
+import com.infokey.infokey.Response.Response;
+
 import java.util.List;
 
-import com.infokey.infokey.Form.AccountForm;
-import com.infokey.infokey.Model.Account;
-import com.infokey.infokey.Model.Response;
-
 public interface IAccountService {
-    Response<String> addAccount(String token, AccountForm form);
 
-    Response<String> updateAccount(String token, Account account) throws SQLException;
-    
-    Response<String> deleteAccount(String token, String accountId) throws SQLException;
+    Response<String> addAccount(String token, AccountForm account);
 
-    Response<List<Account>> findUserAccounts(String token) throws SQLException;
+    Response<String> updateAccount(String token, AccountForm account, String accountId);
+
+    Response<String> deleteAccount(String token, String accountId);
+
+    Response<List<Account>> findUserAccounts(String token);
 }

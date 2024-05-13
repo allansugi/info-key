@@ -2,10 +2,10 @@ package com.infokey.infokey.Form;
 
 public class UpdateAccountForm extends AccountForm {
     private String id;
-    private String userId;
 
-    public UpdateAccountForm() {
-        // Default constructor
+    public UpdateAccountForm(String accountName, String accountUsername, String accountPassword, String id) {
+        super(accountName, accountUsername, accountPassword);
+        this.id = id;
     }
 
     public String getId() {
@@ -16,11 +16,11 @@ public class UpdateAccountForm extends AccountForm {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
-    }
+    public String toString() {
+        return "id: " + getId() +
+                "accountName: " + getAccountName() +
+                "accountUsername: " + getAccountUsername() +
+                "accountPassword: " + getAccountPassword();
 
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 }

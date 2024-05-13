@@ -1,8 +1,4 @@
-package com.infokey.infokey.Model;
-
-import java.util.UUID;
-
-import com.infokey.infokey.Form.RegisterForm;
+package com.infokey.infokey.DTO;
 
 public class UserAccount {
     private String id;
@@ -10,20 +6,11 @@ public class UserAccount {
     private String email;
     private String password;
 
-    public UserAccount() {
-        // Default constructor
-    }
-
-
-    /**
-     * convert register form to user account to store into database
-     * @param form
-     */
-    public UserAccount(RegisterForm form) {
-        this.id = UUID.randomUUID().toString();
-        this.username = form.getUsername();
-        this.email = form.getEmail();
-        this.password = form.getPassword();
+    public UserAccount(String username, String email, String password, String id) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
     }
 
     public String getId() {
@@ -57,6 +44,4 @@ public class UserAccount {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    
 }

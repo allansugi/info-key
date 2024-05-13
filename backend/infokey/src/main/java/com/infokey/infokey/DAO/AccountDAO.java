@@ -1,142 +1,69 @@
 package com.infokey.infokey.DAO;
 
-import com.infokey.infokey.Model.Account;
-import com.infokey.infokey.Util.DBUtil;
+import com.infokey.infokey.DTO.Account;
 import com.infokey.infokey.interfaces.DAO.IDAO;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class AccountDAO implements IDAO<Account> {
 
-    @Autowired
-    public AccountDAO() {
-        // Default Constructor
+    private final JdbcClient jdbcClient;
+    public AccountDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = jdbcClient;
     }
 
     @Override
-    public void save(Account item) throws SQLException {
-        try (Connection conn = DBUtil.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement(
-                """
-                INSERT INTO account (id, userId, account_name, account_username, account_password)
-                VALUES (?, ?, ?, ?, ?)
-                """
-            );
+    public void save(Account item) {
+        int update = jdbcClient.sql("INSERT INTO vault_account (id, userId, account_name, account_username, account_password) VALUES (?, ?, ?, ?, ?)")
+                .params(item.getId(), item.getUserId(), item.getAccount_name(), item.getAccount_username(), item.getAccount_password())
+                .update();
 
-            stmt.setString(1, item.getId());
-            stmt.setString(2, item.getUserId());
-            stmt.setString(3, item.getAccount_name());
-            stmt.setString(4, item.getAccount_username());
-            stmt.setString(5, item.getAccount_password());
-
-            stmt.execute();
-
-        } catch (Exception e) {
-            throw new SQLException("Database connection error");
-        }
+        Assert.state(update == 1, "Failed to add account name " + item.getAccount_name() + " from" + item.getUserId());
     }
 
     @Override
-    public void update(Account item) throws SQLException {
-        try (Connection conn = DBUtil.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement(
-                """
-                UPDATE account
-                SET account_name = ?,
-                    account_username = ?,
-                    account_password = ?
-                WHERE id = ?
-                AND userId = ?
-                """
-            );
+    public void update(Account item, String id) {
+        int update = jdbcClient.sql(
+                    """
+                    UPDATE vault_account
+                    SET account_name = ?,
+                        account_username = ?,
+                        account_password = ?
+                    WHERE id = ? AND userId = ?
+                    """)
+                .params(item.getAccount_name(), item.getAccount_username(), item.getAccount_password(), id, item.getUserId())
+                .update();
 
-            stmt.setString(1, item.getId());
-            stmt.setString(2, item.getUserId());
-            stmt.setString(3, item.getAccount_name());
-            stmt.setString(4, item.getAccount_username());
-            stmt.setString(5, item.getAccount_password());
-
-            stmt.executeUpdate();
-        } catch (Exception e) {
-            throw new SQLException("Database connection error");
-        }
+        Assert.state(update == 1, "Failed to update Account " + id);
     }
 
     @Override
-    public List<Account> findAll() throws SQLException {
-        List<Account> accounts = new ArrayList<>();
-        try (Connection conn = DBUtil.getConnection()) {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM account");
-
-            while(rs.next()) {
-                Account account = new Account();
-                
-                String id = rs.getString("id");
-                String userId = rs.getString("userId");
-                String accountName = rs.getString("account_name");
-                String accountUsername = rs.getString("account_username");
-                String accountPassword = rs.getString("account_password");
-
-                account.setId(id);
-                account.setUserId(userId);
-                account.setAccount_username(accountUsername);
-                account.setAccount_name(accountName);
-                account.setAccount_password(accountPassword);
-
-                accounts.add(account);
-            }
-
-            return accounts;
-        } catch (Exception e) {
-            throw new SQLException("Database connection error");
-        }
+    public Optional<Account> findById(String id) {
+        return jdbcClient.sql("SELECT * FROM vault_account where id = ?")
+                .params(id)
+                .query(Account.class)
+                .optional();
     }
 
     @Override
-    public Account findById(String id) throws SQLException {
-        try (Connection  conn = DBUtil.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM account where id = ?");
-            stmt.setString(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                Account account = new Account();
-                
-                String userId = rs.getString("userId");
-                String accountName = rs.getString("account_name");
-                String accountUsername = rs.getString("account_username");
-                String accountPassword = rs.getString("account_password");
+    public void delete(String id) {
+        int updated = jdbcClient.sql("DELETE FROM vault_account where id = ?")
+                .params(id)
+                .update();
 
-                account.setId(id);
-                account.setUserId(userId);
-                account.setAccount_username(accountUsername);
-                account.setAccount_name(accountName);
-                account.setAccount_password(accountPassword);
-
-                return account;
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            throw new SQLException("Database connection error");
-        }
+        Assert.state(updated == 1, "Failed to delete account " + id);
     }
 
-    @Override
-    public void delete(String id) throws SQLException {
-        try (Connection conn = DBUtil.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("DELETE FROM account where id = ?");
-            statement.setString(1, id);
-            statement.execute();
-        } catch (Exception e) {
-            throw new SQLException("Database connection error");
-        }
-        
+    public List<Account> findByUserId(String userId) {
+        return jdbcClient.sql("SELECT * FROM vault_account where userId = ?")
+                .params(userId)
+                .query(Account.class)
+                .list();
     }
     
 }

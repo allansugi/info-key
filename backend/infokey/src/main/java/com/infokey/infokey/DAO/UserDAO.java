@@ -1,133 +1,60 @@
 package com.infokey.infokey.DAO;
 
-import com.infokey.infokey.Model.UserAccount;
-import com.infokey.infokey.Util.DBUtil;
+import com.infokey.infokey.DTO.UserAccount;
 import com.infokey.infokey.interfaces.DAO.IDAO;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.Assert;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserDAO implements IDAO<UserAccount> {
 
-    @Autowired
-    public UserDAO() {
-        
+    private final JdbcClient jdbcClient;
+    public UserDAO(JdbcClient jdbcClient) {
+        this.jdbcClient = jdbcClient;
     }
 
     @Override
-    public void save(UserAccount item) throws SQLException {
-        try (Connection conn = DBUtil.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement(
-                """
-                INSERT INTO user (id, username, email, password)
-                VALUES (?, ?, ?, ?)
-                """
-            );
+    public void save(UserAccount item) {
+        int update = jdbcClient.sql("INSERT INTO user_account (id, username, email, password) VALUES (?, ?, ?, ?)")
+                .params(item.getId(), item.getUsername(), item.getEmail(), item.getPassword())
+                .update();
 
-            stmt.setString(1, item.getId());
-            stmt.setString(2, item.getUsername());
-            stmt.setString(3, item.getEmail());
-            stmt.setString(4, item.getPassword());
-
-            stmt.execute();
-        } catch (Exception e) {
-            throw new SQLException("Database connection error");
-        }
+        Assert.state(update == 1, "failed to add user " + item.getUsername());
     }
 
     @Override
-    public void update(UserAccount item) throws SQLException {
-        try (Connection conn = DBUtil.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement(
-                """
-                UPDATE user
-                SET email = ?,
-                    username = ?,
-                    password = ?
-                WHERE id = ?
-                """
-            );
+    public void update(UserAccount item, String id) {
+        int update = jdbcClient.sql("UPDATE user_account SET email = ?, username = ?, password = ? WHERE id = ?")
+                .params(item.getEmail(), item.getUsername(), item.getPassword(), item.getId())
+                .update();
 
-            stmt.setString(1, item.getId());
-            stmt.setString(2, item.getEmail());
-            stmt.setString(3, item.getUsername());
-            stmt.setString(4, item.getPassword());
-
-            stmt.executeUpdate();
-        } catch (Exception e) {
-            throw new SQLException("Database connection error");
-        }
+        Assert.state(update == 1, "failed to update user " + item.getId());
     }
 
     @Override
-    public List<UserAccount> findAll() throws SQLException {
-         List<UserAccount> accounts = new ArrayList<>();
-        try (Connection conn = DBUtil.getConnection()) {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM user");
-
-            while(rs.next()) {
-                UserAccount account = new UserAccount();
-                
-                String id = rs.getString("id");
-                String email= rs.getString("email");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
-
-                account.setId(id);
-                account.setEmail(email);
-                account.setUsername(username);
-                account.setPassword(password);
-
-                accounts.add(account);
-            }
-
-            return accounts;
-        } catch (Exception e) {
-            throw new SQLException("Database connection error");
-        }
+    public Optional<UserAccount> findById(String id) {
+        return jdbcClient.sql("SELECT * FROM user_account where id = ?")
+                .params(id)
+                .query(UserAccount.class)
+                .optional();
     }
 
     @Override
-    public UserAccount findById(String id) throws SQLException {
-        try (Connection  conn = DBUtil.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM user where id = ?");
-            stmt.setString(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                UserAccount account = new UserAccount();
-                
-                String email= rs.getString("email");
-                String username = rs.getString("username");
-                String password = rs.getString("password");
+    public void delete(String id) {
+        int update = jdbcClient.sql("DELETE FROM user_account where id = ?")
+                .params(id)
+                .update();
 
-                account.setId(id);
-                account.setEmail(email);
-                account.setUsername(username);
-                account.setPassword(password);
-
-                return account;
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            throw new SQLException("Database connection error");
-        }
+        Assert.state(update == 1, "failed to delete user " + id);
     }
 
-    @Override
-    public void delete(String id) throws SQLException {
-        try (Connection conn = DBUtil.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("DELETE FROM user where id = ?");
-            statement.setString(1, id);
-            statement.execute();
-        } catch (Exception e) {
-            throw new SQLException("Database connection error");
-        }
+    public List<UserAccount> findAll() {
+            return jdbcClient.sql("SELECT * FROM user_account")
+                    .query(UserAccount.class)
+                    .list();
     }
-    
 }

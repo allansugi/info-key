@@ -1,14 +1,14 @@
-package com.infokey.infokey.Model;
-
+package com.infokey.infokey.Response;
+/**
+ * Response Body
+ */
 public class Response<T> {
-    private Boolean success;
+    private boolean success;
     private T response;
 
-    /**
-     * Response Body
-     */
-    public Response() {
-        // Default constructor
+    public Response(boolean success, T response) {
+        this.success = success;
+        this.response = response;
     }
 
     public Boolean getSuccess() {

@@ -4,9 +4,11 @@ public class AccountForm {
     private String accountName;
     private String accountUsername;
     private String accountPassword;
-    
-    public AccountForm() {
-        // Default constructor
+
+    public AccountForm(String accountName, String accountUsername, String accountPassword) {
+        this.accountName = accountName;
+        this.accountUsername = accountUsername;
+        this.accountPassword = accountPassword;
     }
 
     public String getAccountName() {

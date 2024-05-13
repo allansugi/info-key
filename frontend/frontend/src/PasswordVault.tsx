@@ -1,17 +1,24 @@
 import { Container, InputAdornment, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import React from "react";
-import { Account } from "./types/Account";
+import { AccountViewModel } from "./types/Account";
 import { EditAccountDialog } from "./EditAccountDialog";
 import NewAccountDialog from "./NewAccountDialog";
 import { ResponseGetAccount } from "./types/Response";
 
 export default function PasswordVault() {
-  const [accounts, setAccounts] = React.useState<Account[]>([]);
-  const [searchResult, setSearchResult] = React.useState<Account[]>([]);
+  const [accounts, setAccounts] = React.useState<AccountViewModel[]>([]);
+  const [searchResult, setSearchResult] = React.useState<AccountViewModel[]>([]);
+  const [searchInput, setSearchInput] = React.useState('');
+  
+  // for refetching data after CRUD operation 
+  const [toggle, setToggle] = React.useState(true);
 
   React.useEffect(() => {
+    let ignore = false;
+
     const getAccounts = async() => {
+      // credentials with JWT token
       const response = await fetch("http://localhost:8080/api/account/find/accounts", {
         method: 'GET',
         mode: 'cors',
@@ -23,22 +30,34 @@ export default function PasswordVault() {
       });
 
       const responseBody: ResponseGetAccount = await response.json();
-      setAccounts(responseBody.response);
-      setSearchResult(responseBody.response);
+      console.log(responseBody);
+      if (!ignore) {
+        setAccounts(responseBody.response);
+      }
     }
+    
     getAccounts();
-  }, [])
+
+    return () => {
+      ignore = true
+    }
+  }, [toggle])
 
   const handleSearch = (searchQuery: string) => {
-    if (!searchQuery.length) {
+    setSearchInput(searchQuery);
+    if (searchInput === '') {
       setSearchResult(accounts);
     } else {
-      setSearchResult([...accounts].filter((account) => {
-        return account.account_name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-              account.account_username.toLowerCase().includes(searchQuery.toLowerCase())
+      setSearchResult(accounts.filter((account) => {
+        return account.accountName.toLowerCase().indexOf(searchInput) !== -1 || 
+              account.accountUsername.toLowerCase().indexOf(searchInput) !== -1
       }));
     }
   }
+
+  const handleAccountChange = () => {
+    setToggle(prevState => !prevState);
+  } 
 
   return (
     <TableContainer component={Container} sx={{padding: "20px"}}>
@@ -59,7 +78,7 @@ export default function PasswordVault() {
                   ),
                 }}
               />
-            <NewAccountDialog accounts={accounts} setAccounts={setAccounts}/>
+            <NewAccountDialog handleNewAccount={handleAccountChange}/>
           </Stack>
         </Stack>
       <Table aria-label="password vault table">
@@ -72,14 +91,35 @@ export default function PasswordVault() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {searchResult.map((row) => (
-            <EditAccountDialog key={row.id} props={{
-              id: row.id, 
-              accountname: row.account_name, 
-              username: row.account_username, 
-              password: row.account_password}}
-            />
-          ))}
+          {
+            searchInput.length > 1 ?
+            searchResult.map((row, i) => (
+              <EditAccountDialog
+                key={i}
+                listId={i}
+                handleAccountChange={handleAccountChange}
+                props={{
+                  id: row.id, 
+                  accountName: row.accountName, 
+                  accountUsername: row.accountUsername, 
+                  accountPassword: row.accountPassword
+                }}
+              />
+            )) :
+            accounts.map((row, i) => (
+              <EditAccountDialog
+                key={i}
+                listId={i}
+                handleAccountChange={handleAccountChange}
+                props={{
+                  id: row.id, 
+                  accountName: row.accountName, 
+                  accountUsername: row.accountUsername, 
+                  accountPassword: row.accountPassword
+                }}
+              />
+            ))
+          }
         </TableBody>
       </Table>
     </TableContainer>

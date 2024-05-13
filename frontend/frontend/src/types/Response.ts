@@ -1,6 +1,6 @@
-import { Account, AccountResult } from "./Account";
+import { AccountViewModel } from "./Account";
 
 export interface ResponseGetAccount {
     success: Boolean,
-    response: Account[]
+    response: AccountViewModel[]
 }

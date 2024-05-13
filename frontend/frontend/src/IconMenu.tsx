@@ -4,10 +4,15 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
-import { Account, AccountResult } from "./types/Account";
+import { AccountViewModel } from "./types/Account";
 import { SnackbarMessage } from "./types/SnackBarMessage";
 
-export function IconMenu({ account }: { account: AccountResult }) {
+interface IconMenuProp {
+    account: AccountViewModel,
+    listId: number,
+    handleAccountChange: () => void
+}
+export function IconMenu({ account, listId ,handleAccountChange }: IconMenuProp) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -63,21 +68,36 @@ export function IconMenu({ account }: { account: AccountResult }) {
 
     // only works on browser
     const handleCopyPassword = () => {
-        navigator.clipboard.writeText(account.password)
+        navigator.clipboard.writeText(account.accountPassword)
         handleClickAlert("Password Copied")
         handleClose();
     }
 
     // only works on browser
     const handleCopyUsername = () => {
-        navigator.clipboard.writeText(account.username)
+        navigator.clipboard.writeText(account.accountUsername)
         handleClickAlert("Username Copied")
         handleClose();
     }
 
-    const handleDelete = () => {
-        handleClickAlert("Account has been Deleted");
-        handleClose();
+    const handleDelete = async() => {
+        try {
+            await fetch(`http://localhost:8080/api/account/delete/${account.id}`, {
+                method: 'DELETE',
+                mode: 'cors',
+                credentials:'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            });
+            handleAccountChange();
+            handleClickAlert("Account has been Deleted");
+        } catch (error) {
+            handleClickAlert("request can't be processed due to server problem");
+        } finally {
+            handleClose();
+        }
     }
 
     const handleExited = () => {

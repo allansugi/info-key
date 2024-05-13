@@ -1,4 +1,4 @@
-package com.infokey.infokey.Model;
+package com.infokey.infokey.DTO;
 
 public class Account {
     private String id;
@@ -7,8 +7,12 @@ public class Account {
     private String account_username;
     private String account_password;
 
-    public Account() {
-        // Default constructor
+    public Account(String id, String userId, String account_name, String account_username, String account_password) {
+        this.id = id;
+        this.userId = userId;
+        this.account_name = account_name;
+        this.account_username = account_username;
+        this.account_password = account_password;
     }
 
     public String getAccount_name() {
