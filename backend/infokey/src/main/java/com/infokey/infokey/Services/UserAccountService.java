@@ -4,18 +4,21 @@ import com.infokey.infokey.DAO.UserDAO;
 import com.infokey.infokey.DTO.UserAccount;
 import com.infokey.infokey.Exceptions.UserAccount.PasswordRequirementException;
 import com.infokey.infokey.Exceptions.UserAccount.UnauthorizedCredentialException;
+import com.infokey.infokey.Exceptions.UserAccount.UserAccountNotFoundException;
 import com.infokey.infokey.Form.LoginForm;
 import com.infokey.infokey.Form.RegisterForm;
 import com.infokey.infokey.Mapper.UserAccountMapper;
 import com.infokey.infokey.Response.Response;
 import com.infokey.infokey.Template.UserAccountPasswordRequirementValidator;
 import com.infokey.infokey.Util.JWTUtil;
+import com.infokey.infokey.ViewModel.UserInfo;
 import com.infokey.infokey.interfaces.Service.IUserAccountService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserAccountService implements IUserAccountService {
@@ -48,6 +51,8 @@ public class UserAccountService implements IUserAccountService {
         List<UserAccount> validUser = users.stream()
                 .filter(u -> (u.getEmail().equals(valId) || u.getUsername().equals(valId)))
                 .toList();
+
+        // username input can be their username or email
         if (!validUser.isEmpty() && form.getPassword().equals(validUser.get(0).getPassword())) {
             Cookie cookie = new Cookie("token", jwt.createToken(validUser.get(0).getId()));
             res.addCookie(cookie);
@@ -66,5 +71,19 @@ public class UserAccountService implements IUserAccountService {
     public Response<String> deleteUser(int id) {
         return null;
     }
-    
+
+    @Override
+    public Response<UserInfo> getUserInfo(String token) {
+        String userId = jwt.verifyToken(token);
+        Optional<UserAccount> account = dao.findById(userId);
+
+        if (account.isEmpty()) {
+            throw new UserAccountNotFoundException("no user found");
+        }
+
+        UserAccount getAccount = account.get();
+        UserInfo info = mapper.toUserInfo(getAccount);
+        return new Response<>(true, info);
+    }
+
 }

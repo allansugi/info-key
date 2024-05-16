@@ -4,12 +4,14 @@ import com.infokey.infokey.DAO.UserDAO;
 import com.infokey.infokey.DTO.UserAccount;
 import com.infokey.infokey.Exceptions.UserAccount.PasswordRequirementException;
 import com.infokey.infokey.Exceptions.UserAccount.UnauthorizedCredentialException;
+import com.infokey.infokey.Exceptions.UserAccount.UserAccountNotFoundException;
 import com.infokey.infokey.Form.LoginForm;
 import com.infokey.infokey.Form.RegisterForm;
 import com.infokey.infokey.Mapper.UserAccountMapper;
 import com.infokey.infokey.Response.Response;
 import com.infokey.infokey.Services.UserAccountService;
 import com.infokey.infokey.Util.JWTUtil;
+import com.infokey.infokey.ViewModel.UserInfo;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,9 +22,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -39,13 +43,19 @@ public class UserServiceTest {
     UserAccountService service;
 
     private final List<UserAccount> userAccounts = new ArrayList<>();
+    private final String userId = UUID.randomUUID().toString();
+    private final UserAccount account = new UserAccount(
+                                        "username1",
+                                        "username1@email.com",
+                                        "Password_1",
+                                                userId);
 
     @BeforeEach
     void setup() {
         userAccounts.add(
                 new UserAccount("username1",
                         "username1@email.com",
-                        "Password_1", UUID.randomUUID().toString())
+                        "Password_1", userId)
         );
 
         userAccounts.add(
@@ -144,5 +154,25 @@ public class UserServiceTest {
         when(dao.findAll()).thenReturn(userAccounts);
 
         assertThrows(UnauthorizedCredentialException.class, () -> service.authenticate(form, res));
+    }
+
+    @Test
+    void shouldFindUserInfo() {
+        String token = "validToken1";
+        UserInfo userInfo = mapper.toUserInfo(account);
+        when(util.verifyToken(token)).thenReturn(this.userId);
+        when(dao.findById(any(String.class))).thenReturn(Optional.of(account));
+        when(mapper.toUserInfo(account)).thenReturn(userInfo);
+
+        Response<UserInfo> response = service.getUserInfo(token);
+        assertTrue(response.getSuccess());
+        assertEquals(response.getResponse(), userInfo);
+    }
+
+    @Test
+    void shouldNotFindUserInfoAndThrowError() {
+        String token = "invalidToken1";
+        when(util.verifyToken(token)).thenReturn(UUID.randomUUID().toString());
+        assertThrows(UserAccountNotFoundException.class, () -> service.getUserInfo(token));
     }
 }

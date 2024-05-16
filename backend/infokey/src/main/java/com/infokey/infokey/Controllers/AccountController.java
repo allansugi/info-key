@@ -13,7 +13,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
-@RequestMapping("/api/account")
+@RequestMapping("/api/user/account")
 public class AccountController implements IAccountController {
     private final AccountService service;
     public AccountController(AccountService service) {

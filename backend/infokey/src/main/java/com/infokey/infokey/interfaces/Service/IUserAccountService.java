@@ -4,6 +4,7 @@ import com.infokey.infokey.DTO.UserAccount;
 import com.infokey.infokey.Form.LoginForm;
 import com.infokey.infokey.Form.RegisterForm;
 import com.infokey.infokey.Response.Response;
+import com.infokey.infokey.ViewModel.UserInfo;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface IUserAccountService {
@@ -14,4 +15,6 @@ public interface IUserAccountService {
     Response<String> updateUser(UserAccount account);
 
     Response<String> deleteUser(int id);
+
+    Response<UserInfo> getUserInfo(String token);
 }

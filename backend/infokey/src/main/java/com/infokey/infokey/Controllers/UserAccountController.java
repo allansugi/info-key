@@ -5,6 +5,7 @@ import com.infokey.infokey.Form.RegisterForm;
 import com.infokey.infokey.Form.UpdateAccountForm;
 import com.infokey.infokey.Response.Response;
 import com.infokey.infokey.Services.UserAccountService;
+import com.infokey.infokey.ViewModel.UserInfo;
 import com.infokey.infokey.interfaces.Controller.IUserAccountController;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,12 @@ public class UserAccountController implements IUserAccountController {
     @PutMapping("/login")
     public ResponseEntity<Response<String>> login(@RequestBody LoginForm form, HttpServletResponse res) throws Exception {
         return new ResponseEntity<>(service.authenticate(form, res), HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping("/get/info")
+    public ResponseEntity<Response<UserInfo>> getInfo(@CookieValue String token) {
+        return new ResponseEntity<>(service.getUserInfo(token), HttpStatus.OK);
     }
 
     /**

@@ -57,7 +57,7 @@ public class AccountControllerTest {
     void shouldCreateNewAccount() throws Exception {
         AccountForm form = new AccountForm("account", "username", "password");
         when(service.addAccount(token, form)).thenReturn(new Response<String>(true, "Account added"));
-        mockMvc.perform(post("/api/account/add")
+        mockMvc.perform(post("/api/user/account/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(form))
                         .cookie(cookie))
@@ -68,7 +68,7 @@ public class AccountControllerTest {
     void shouldGetAccount() throws Exception {
         Response<List<Account>> successfulResponse = new Response<>(true, accounts);
         when(service.findUserAccounts(token)).thenReturn(successfulResponse);
-        mockMvc.perform(get("/api/account/find/accounts").cookie(cookie))
+        mockMvc.perform(get("/api/user/account/find/accounts").cookie(cookie))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.response.size()").value(accounts.size()));
     }
@@ -79,7 +79,7 @@ public class AccountControllerTest {
         Response<String> succcessfulResponse = new Response<>(true, "account information updated");
         AccountForm form = new AccountForm("name", "newusername", "newpassword");
         when(service.updateAccount(token, form, id)).thenReturn(succcessfulResponse);
-        mockMvc.perform(put("/api/account/update/" + id)
+        mockMvc.perform(put("/api/user/account/update/" + id)
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(form))
                         .cookie(cookie))
                 .andExpect(status().isOk());
@@ -89,7 +89,7 @@ public class AccountControllerTest {
     void shouldDeleteAccount() throws Exception {
         Cookie cookie = new Cookie("token", token);
         Response<String> succcessfulResponse = new Response<>(true, "account deleted");
-        mockMvc.perform(delete("/api/account/delete/" + id)
+        mockMvc.perform(delete("/api/user/account/delete/" + id)
                         .cookie(cookie))
                 .andExpect(status().isOk());
     }

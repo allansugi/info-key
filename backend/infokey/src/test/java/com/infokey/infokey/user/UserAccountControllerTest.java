@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.infokey.infokey.Controllers.UserAccountController;
 import com.infokey.infokey.Exceptions.UserAccount.PasswordRequirementException;
 import com.infokey.infokey.Exceptions.UserAccount.UnauthorizedCredentialException;
+import com.infokey.infokey.Exceptions.UserAccount.UserAccountNotFoundException;
 import com.infokey.infokey.Form.LoginForm;
 import com.infokey.infokey.Form.RegisterForm;
 import com.infokey.infokey.Response.Response;
 import com.infokey.infokey.Services.UserAccountService;
+import com.infokey.infokey.ViewModel.UserInfo;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserAccountController.class)
@@ -71,5 +73,22 @@ public class UserAccountControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(form)))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void shouldFindUserInfoWithCorrectResponseCode() throws Exception {
+        String token = "validToken";
+        Cookie cookie= new Cookie("token", token);
+        Response<UserInfo> successfulResponse = new Response(true, new UserInfo("user", "email"));
+        when(service.getUserInfo(token)).thenReturn(successfulResponse);
+        mockMvc.perform(get("/api/user/get/info").cookie(cookie)).andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldNotFindUserInfoWithErrorResponseCode() throws Exception {
+        String token = "validToken";
+        Cookie cookie= new Cookie("token", token);
+        when(service.getUserInfo(token)).thenThrow(UserAccountNotFoundException.class);
+        mockMvc.perform(get("/api/user/get/info").cookie(cookie)).andExpect(status().isNotFound());
     }
 }
