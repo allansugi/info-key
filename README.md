@@ -1,2 +1,4 @@
-# info-key
-personal project for password generator and manager with authentication
+# Password Manager Server
+This is the server side code for the password manager application for my personal project
+
+
