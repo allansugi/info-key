@@ -3,6 +3,7 @@ package com.infokey.infokey.Controllers;
 import com.infokey.infokey.Form.LoginForm;
 import com.infokey.infokey.Form.RegisterForm;
 import com.infokey.infokey.Form.UpdateAccountForm;
+import com.infokey.infokey.Form.UpdateUserPasswordForm;
 import com.infokey.infokey.Response.Response;
 import com.infokey.infokey.Services.UserAccountService;
 import com.infokey.infokey.ViewModel.UserInfo;
@@ -48,5 +49,17 @@ public class UserAccountController implements IUserAccountController {
     public ResponseEntity<Response<String>> updateUsername(@CookieValue String token, @RequestBody UpdateAccountForm form) {
         return null;
     }
+    @Override
+    @PutMapping("/update/password")
+    public ResponseEntity<Response<String>> updatePassword(String token, UpdateUserPasswordForm form, HttpServletResponse res) {
+        return new ResponseEntity<>(service.updatePassword(token, form, res), HttpStatus.OK);
+    }
+
+    @Override
+    @PutMapping("/logout")
+    public ResponseEntity<Response<String>> logout(String token, HttpServletResponse res) {
+        return new ResponseEntity<>(service.logout(res), HttpStatus.OK);
+    }
+
 
 }

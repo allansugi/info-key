@@ -7,6 +7,7 @@ import com.infokey.infokey.Exceptions.UserAccount.UnauthorizedCredentialExceptio
 import com.infokey.infokey.Exceptions.UserAccount.UserAccountNotFoundException;
 import com.infokey.infokey.Form.LoginForm;
 import com.infokey.infokey.Form.RegisterForm;
+import com.infokey.infokey.Form.UpdateUserPasswordForm;
 import com.infokey.infokey.Mapper.UserAccountMapper;
 import com.infokey.infokey.Response.Response;
 import com.infokey.infokey.Services.UserAccountService;
@@ -52,11 +53,7 @@ public class UserServiceTest {
 
     @BeforeEach
     void setup() {
-        userAccounts.add(
-                new UserAccount("username1",
-                        "username1@email.com",
-                        "Password_1", userId)
-        );
+        userAccounts.add(account);
 
         userAccounts.add(
                 new UserAccount("username2",
@@ -82,8 +79,6 @@ public class UserServiceTest {
     void shouldGetIllegalRegisterExceptionWithNoUppercase() {
         RegisterForm form = new RegisterForm("username2", "username2@email.com", "validpassword_1");
         assertThrows(PasswordRequirementException.class, () -> service.addUser(form));
-//        Response<String> response = service.addUser(form);
-//        assertFalse(response.getSuccess(), "get success should be false");
     }
 
     @Test
@@ -174,5 +169,45 @@ public class UserServiceTest {
         String token = "invalidToken1";
         when(util.verifyToken(token)).thenReturn(UUID.randomUUID().toString());
         assertThrows(UserAccountNotFoundException.class, () -> service.getUserInfo(token));
+    }
+
+    @Test
+    void shouldUpdateUserPassword() {
+        String token = "validToken";
+        when(util.verifyToken(token)).thenReturn(userId);
+        when(dao.findById(userId)).thenReturn(Optional.of(account));
+        HttpServletResponse res = mock(HttpServletResponse.class);
+
+        UpdateUserPasswordForm form = new UpdateUserPasswordForm("Password_1", "new_Password123");
+        when(dao.updatePassword(form.getNewPassword(), userId)).thenReturn(1);
+        Response<String> response = service.updatePassword(token, form, res);
+        assertTrue(response.getSuccess());
+    }
+
+    @Test
+    void shouldNotUpdateUserPasswordWithInvalidIdNotFound() {
+        String token = "validToken";
+
+        // new Id not associated with any account
+        String id = UUID.randomUUID().toString();
+        when(util.verifyToken(token)).thenReturn(id);
+
+        String newPassword = "New_Password_123";
+        UpdateUserPasswordForm form = new UpdateUserPasswordForm("Password_1", newPassword);
+        HttpServletResponse res = mock(HttpServletResponse.class);
+
+        assertThrows(UserAccountNotFoundException.class, () -> service.updatePassword(token, form, res));
+    }
+
+    @Test
+    void shouldNotUpdateUserPasswordWithValidIdWrongMasterPassword() {
+        String token = "validToken";
+        when(util.verifyToken(token)).thenReturn(userId);
+        when(dao.findById(userId)).thenReturn(Optional.of(account));
+        HttpServletResponse res = mock(HttpServletResponse.class);
+
+        UpdateUserPasswordForm form = new UpdateUserPasswordForm("wrongpassword", "new_Password123");
+
+        assertThrows(UnauthorizedCredentialException.class, () -> service.updatePassword(token, form, res));
     }
 }

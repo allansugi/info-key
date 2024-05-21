@@ -7,6 +7,7 @@ import com.infokey.infokey.Exceptions.UserAccount.UnauthorizedCredentialExceptio
 import com.infokey.infokey.Exceptions.UserAccount.UserAccountNotFoundException;
 import com.infokey.infokey.Form.LoginForm;
 import com.infokey.infokey.Form.RegisterForm;
+import com.infokey.infokey.Form.UpdateUserPasswordForm;
 import com.infokey.infokey.Response.Response;
 import com.infokey.infokey.Services.UserAccountService;
 import com.infokey.infokey.ViewModel.UserInfo;
@@ -79,7 +80,7 @@ public class UserAccountControllerTest {
     void shouldFindUserInfoWithCorrectResponseCode() throws Exception {
         String token = "validToken";
         Cookie cookie= new Cookie("token", token);
-        Response<UserInfo> successfulResponse = new Response(true, new UserInfo("user", "email"));
+        Response<UserInfo> successfulResponse = new Response<>(true, new UserInfo("user", "email"));
         when(service.getUserInfo(token)).thenReturn(successfulResponse);
         mockMvc.perform(get("/api/user/get/info").cookie(cookie)).andExpect(status().isOk());
     }
@@ -91,4 +92,48 @@ public class UserAccountControllerTest {
         when(service.getUserInfo(token)).thenThrow(UserAccountNotFoundException.class);
         mockMvc.perform(get("/api/user/get/info").cookie(cookie)).andExpect(status().isNotFound());
     }
+
+    @Test
+    void shouldUpdatePasswordResponseCodeOk() throws Exception {
+        String token = "validToken";
+        Cookie cookie = new Cookie("token", token);
+        Response<String> response = new Response<>(true, "success");
+        UpdateUserPasswordForm form = mock(UpdateUserPasswordForm.class);
+        when(service.updatePassword(any(String.class), any(UpdateUserPasswordForm.class), any(HttpServletResponse.class)))
+                .thenReturn(response);
+        mockMvc.perform(put("/api/user/update/password")
+                    .cookie(cookie)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(form)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldNotUpdatePasswordResponseCodeNotFound() throws Exception {
+        String token = "InvalidToken";
+        Cookie cookie = new Cookie("token", token);
+        UpdateUserPasswordForm form = mock(UpdateUserPasswordForm.class);
+        when(service.updatePassword(any(String.class), any(UpdateUserPasswordForm.class), any(HttpServletResponse.class)))
+                .thenThrow(UserAccountNotFoundException.class);
+        mockMvc.perform(put("/api/user/update/password")
+                .cookie(cookie)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(form)))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldUpdatePasswordResponseCodeUnauthorized() throws Exception {
+        String token = "validToken";
+        Cookie cookie = new Cookie("token", token);
+        UpdateUserPasswordForm form = mock(UpdateUserPasswordForm.class);
+        when(service.updatePassword(any(String.class), any(UpdateUserPasswordForm.class), any(HttpServletResponse.class)))
+                .thenThrow(UnauthorizedCredentialException.class);
+        mockMvc.perform(put("/api/user/update/password")
+                    .cookie(cookie)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(form)))
+            .andExpect(status().isUnauthorized());
+    }
+
 }

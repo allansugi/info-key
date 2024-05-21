@@ -4,7 +4,6 @@ import com.infokey.infokey.DTO.Account;
 import com.infokey.infokey.interfaces.DAO.IDAO;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,17 +17,15 @@ public class AccountDAO implements IDAO<Account> {
     }
 
     @Override
-    public void save(Account item) {
-        int update = jdbcClient.sql("INSERT INTO vault_account (id, userId, account_name, account_username, account_password) VALUES (?, ?, ?, ?, ?)")
+    public int save(Account item) {
+        return jdbcClient.sql("INSERT INTO vault_account (id, userId, account_name, account_username, account_password) VALUES (?, ?, ?, ?, ?)")
                 .params(item.getId(), item.getUserId(), item.getAccount_name(), item.getAccount_username(), item.getAccount_password())
                 .update();
-
-        Assert.state(update == 1, "Failed to add account name " + item.getAccount_name() + " from" + item.getUserId());
     }
 
     @Override
-    public void update(Account item, String id) {
-        int update = jdbcClient.sql(
+    public int update(Account item, String id) {
+        return jdbcClient.sql(
                     """
                     UPDATE vault_account
                     SET account_name = ?,
@@ -38,8 +35,6 @@ public class AccountDAO implements IDAO<Account> {
                     """)
                 .params(item.getAccount_name(), item.getAccount_username(), item.getAccount_password(), id, item.getUserId())
                 .update();
-
-        Assert.state(update == 1, "Failed to update Account " + id);
     }
 
     @Override
@@ -51,12 +46,10 @@ public class AccountDAO implements IDAO<Account> {
     }
 
     @Override
-    public void delete(String id) {
-        int updated = jdbcClient.sql("DELETE FROM vault_account where id = ?")
+    public int delete(String id) {
+        return jdbcClient.sql("DELETE FROM vault_account where id = ?")
                 .params(id)
                 .update();
-
-        Assert.state(updated == 1, "Failed to delete account " + id);
     }
 
     public List<Account> findByUserId(String userId) {

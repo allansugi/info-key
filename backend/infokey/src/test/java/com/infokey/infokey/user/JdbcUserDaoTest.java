@@ -23,9 +23,11 @@ public class JdbcUserDaoTest {
     @Autowired
     UserDAO dao;
 
+    private final String id = UUID.randomUUID().toString();
+
     @BeforeEach
     void setup() throws SQLException {
-        dao.save(new UserAccount("user1", "user1@gmail.com", "Password_1", UUID.randomUUID().toString()));
+        dao.save(new UserAccount("user1", "user1@gmail.com", "Password_1", id));
         dao.save(new UserAccount("user2", "user2@gmail.com", "Password_2", UUID.randomUUID().toString()));
         dao.save(new UserAccount("user3", "user3@gmail.com", "Password_3", UUID.randomUUID().toString()));
     }
@@ -49,15 +51,8 @@ public class JdbcUserDaoTest {
         String id = account.getId();
 
         dao.save(account);
-        dao.update(new UserAccount("newuser1","newuser1@gmail.com", "newPassword_1", id), id);
-        Optional<UserAccount> updatedAccount = dao.findById(id);
-        assertTrue(updatedAccount.isPresent());
-        UserAccount verifiedUpdatedAccount = updatedAccount.get();
-
-        assertEquals(verifiedUpdatedAccount.getId(), id);
-        assertEquals(verifiedUpdatedAccount.getEmail(), "newuser1@gmail.com");
-        assertEquals(verifiedUpdatedAccount.getUsername(), "newuser1");
-        assertEquals(verifiedUpdatedAccount.getPassword(), "newPassword_1");
+        int rowAffected = dao.update(new UserAccount("newuser1","newuser1@gmail.com", "newPassword_1", id), id);
+        assertEquals(rowAffected, 1);
     }
 
     @Test
@@ -69,7 +64,8 @@ public class JdbcUserDaoTest {
         List<UserAccount> userAccounts = dao.findAll();
         assertEquals(4, userAccounts.size());
 
-        dao.delete(id);
+        int rowsDeleted = dao.delete(id);
+        assertEquals(rowsDeleted, 1);
         List<UserAccount> updatedUserAccounts = dao.findAll();
         assertEquals(3, updatedUserAccounts.size());
     }
@@ -78,5 +74,24 @@ public class JdbcUserDaoTest {
     void wrongIdShouldNotFindAccount() {
         Optional<UserAccount> account = dao.findById("");
         assertTrue(account.isEmpty());
+    }
+
+    @Test
+    void shouldUpdatePasswordWithValidId() {
+        String newPassword = "NewPassword";
+        int rowsUpdated = dao.updatePassword(newPassword, id);
+        assertEquals(rowsUpdated, 1);
+
+        Optional<UserAccount> accountOptional = dao.findById(id);
+        assertTrue(accountOptional.isPresent());
+        UserAccount account = accountOptional.get();
+        assertEquals(account.getPassword(), newPassword);
+    }
+
+    @Test
+    void shouldNotUpdatePasswordWithNoMatchingId() {
+        String newPassword = "NewPassword";
+        int rowsUpdated = dao.updatePassword(newPassword, "");
+        assertEquals(rowsUpdated, 0);
     }
 }

@@ -7,6 +7,7 @@ import com.infokey.infokey.Exceptions.UserAccount.UnauthorizedCredentialExceptio
 import com.infokey.infokey.Exceptions.UserAccount.UserAccountNotFoundException;
 import com.infokey.infokey.Form.LoginForm;
 import com.infokey.infokey.Form.RegisterForm;
+import com.infokey.infokey.Form.UpdateUserPasswordForm;
 import com.infokey.infokey.Mapper.UserAccountMapper;
 import com.infokey.infokey.Response.Response;
 import com.infokey.infokey.Template.UserAccountPasswordRequirementValidator;
@@ -86,4 +87,36 @@ public class UserAccountService implements IUserAccountService {
         return new Response<>(true, info);
     }
 
+    @Override
+    public Response<String> updatePassword(String token, UpdateUserPasswordForm form, HttpServletResponse res) {
+        String id = jwt.verifyToken(token);
+        Optional<UserAccount> userAccountOptional = dao.findById(id);
+        if (userAccountOptional.isEmpty()) {
+            throw new UserAccountNotFoundException("account not found to be updated");
+        }
+
+        UserAccount user = userAccountOptional.get();
+        if (!user.getPassword().equals(form.getUserInputMasterPassword())) {
+            throw new UnauthorizedCredentialException("wrong password credentials");
+        }
+
+        int updatedRow = dao.updatePassword(form.getNewPassword(), id);
+        if (updatedRow == 0) {
+            return new Response<>(false, "fail to update password");
+        }
+
+        // remove cookie
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        res.addCookie(cookie);
+        return new Response<>(true, "password updated");
+    }
+
+    @Override
+    public Response<String> logout(HttpServletResponse res) {
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        res.addCookie(cookie);
+        return new Response<>(true, "user log out");
+    }
 }
